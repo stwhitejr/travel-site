@@ -1,5 +1,8 @@
 import {getServerClient} from '@/util/supabase/server';
-import {Tag} from './tags';
+import {Database} from './database.types';
+
+export type PhotoMetadata =
+  Database['public']['Tables']['photo_metadata']['Row'];
 
 /**
  * TODO
@@ -10,18 +13,8 @@ import {Tag} from './tags';
  * extra credit
  * see if you can train an AI to do automagically provide tags
  */
-export interface PhotoMetadata {
-  id: string;
-  file_name: string;
-  width: number;
-  height: number;
-  orientation: 'portrait' | 'landscape';
-  rating: 1 | 2 | 3 | 4 | 5;
-  location_id?: string;
-  tags: [{tag: Tag}];
-}
 
-export const getPhotosByTag = async (tagId: string | number) => {
+export const getPhotosByTag = async (tagId: number) => {
   const supabase = await getServerClient();
   const result = await supabase
     .from('photo_tags')
@@ -34,8 +27,7 @@ export const getPhotosByTag = async (tagId: string | number) => {
     )
     .eq('tag_id', tagId);
 
-  const data: PhotoMetadata[] =
-    result.data?.map((result) => result.photo) || [];
+  const data = result.data?.map((result) => result.photo);
 
   return {
     ...result,

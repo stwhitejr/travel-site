@@ -8,7 +8,7 @@ export default async function Location({
   params: Promise<{location: string}>;
 }) {
   const {location} = await params;
-  const {data} = await getLocationById(location);
+  const {data} = await getLocationById(parseInt(location, 10));
 
   return (
     <div>
@@ -17,10 +17,10 @@ export default async function Location({
           <LocationListContainer />
         </div>
         <div>
-          <h1>{data.description}</h1>
+          <h1>{data?.description}</h1>
         </div>
       </div>
-      <Gallery photos={data.photos} />
+      <Gallery photos={data?.photos || []} />
     </div>
   );
 }

@@ -9,12 +9,12 @@ export default function LocationList({
 }: {
   locations: Array<Location>;
 }) {
-  const params = useParams();
+  const params = useParams<{location: string}>();
 
   return (
     <ul>
       {locations.map((loc) => {
-        const isActive = params.location === loc.id;
+        const isActive = parseInt(params.location, 10) === loc.id;
         return (
           <li key={loc.id} style={{fontWeight: isActive ? 'bold' : 'normal'}}>
             <Link href={`/location/${loc.id}`}>{loc.title}</Link>

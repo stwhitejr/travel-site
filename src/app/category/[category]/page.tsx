@@ -4,16 +4,16 @@ import {getPhotosByTag} from '@/lib/photos';
 export default async function CategoryPage({
   params,
 }: {
-  params: {category: string};
+  params: Promise<{category: string}>;
 }) {
   const {category} = await params;
-  const {data} = await getPhotosByTag(category);
+  const {data} = await getPhotosByTag(parseInt(category, 10));
 
   return (
     <div>
       <div>category {category}</div>
       <div>
-        <Gallery photos={data} />
+        <Gallery photos={data || []} />
       </div>
     </div>
   );

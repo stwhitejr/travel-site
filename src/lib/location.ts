@@ -1,24 +1,15 @@
-import {PhotoMetadata} from './photos';
 import {getServerClient} from '@/util/supabase/server';
+import {Database} from './database.types';
 
-export interface Location {
-  id: string;
-  coordinates: [number, number];
-  title: string;
-  description: string;
-  address: string;
-}
-export interface HydratedLocation extends Location {
-  photos: PhotoMetadata[];
-}
+export type Location = Database['public']['Tables']['location']['Row'];
 
 export const getLocations = async () => {
   const supabase = await getServerClient();
-  return await supabase.from('location').select<'*', Location>('*');
+  return await supabase.from('location').select('*');
 };
-export const getLocationById = async (id: number | string) => {
+export const getLocationById = async (id: number) => {
   const supabase = await getServerClient();
-  return (await supabase
+  return await supabase
     .from('location')
     .select(
       `
@@ -34,5 +25,5 @@ export const getLocationById = async (id: number | string) => {
   `
     )
     .eq('id', id)
-    .single()) as {data: HydratedLocation};
+    .single();
 };

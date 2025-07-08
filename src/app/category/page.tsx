@@ -8,16 +8,18 @@ export default async function CategoriesPage() {
 
   return (
     <div>
-      {data.map((photo) => (
-        <Link key={photo.id} href={`/category/${photo.tag_id}`}>
-          <Image
-            src={getImageUrl(photo.file_name)}
-            width={200}
-            height={200}
-            alt={photo.tag_name}
-          />
-        </Link>
-      ))}
+      {data?.map((photo) =>
+        photo.file_name ? (
+          <Link key={photo.id} href={`/category/${photo.tag_id}`}>
+            <Image
+              src={getImageUrl(photo.file_name)}
+              width={200}
+              height={200}
+              alt={photo.tag_name || ''}
+            />
+          </Link>
+        ) : null
+      )}
     </div>
   );
 }
