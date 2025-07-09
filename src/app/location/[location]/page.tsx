@@ -12,8 +12,8 @@ export default async function Location({
 
   return (
     <div>
-      <div style={{display: 'flex'}}>
-        <div>
+      <div style={{display: 'flex', height: '50vh'}}>
+        <div style={{width: '50%'}}>
           <LocationListContainer />
         </div>
         <div>

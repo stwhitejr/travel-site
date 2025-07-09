@@ -1,8 +1,19 @@
 'use client';
 
+import Globe, {LocationMarker, MarkerComponentProps} from '@/app/globe/Globe';
+import Marker from '@/app/globe/Marker';
 import {Location} from '@/lib/location';
 import Link from 'next/link';
 import {useParams} from 'next/navigation';
+import {useMemo} from 'react';
+
+const MarkerWithLink = (props: MarkerComponentProps) => {
+  return (
+    <Link href={`/location/${props.id}`}>
+      <Marker {...props} />
+    </Link>
+  );
+};
 
 export default function LocationList({
   locations,
@@ -11,16 +22,21 @@ export default function LocationList({
 }) {
   const params = useParams<{location: string}>();
 
+  const markers = useMemo(() => {
+    return locations.reduce((acc, location) => {
+      if (location.coordinates) {
+        // @ts-expect-error this is checked above
+        acc = acc.concat(location);
+      }
+      return acc;
+    }, [] as LocationMarker[]);
+  }, [locations]);
+
   return (
-    <ul>
-      {locations.map((loc) => {
-        const isActive = parseInt(params.location, 10) === loc.id;
-        return (
-          <li key={loc.id} style={{fontWeight: isActive ? 'bold' : 'normal'}}>
-            <Link href={`/location/${loc.id}`}>{loc.title}</Link>
-          </li>
-        );
-      })}
-    </ul>
+    <Globe
+      markers={markers}
+      selectedMarker={parseInt(params.location, 10)}
+      MarkerComponent={MarkerWithLink}
+    />
   );
 }
