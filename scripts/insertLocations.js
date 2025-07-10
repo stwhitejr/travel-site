@@ -1,4 +1,4 @@
-const createClient = require('./supabaseClient');
+const createClient = require('./util/supabaseClient');
 const fs = require('fs-extra');
 
 const PHOTOS_FILE = './output/photo_metadata_with_location_id.json';

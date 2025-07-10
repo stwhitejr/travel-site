@@ -77,12 +77,7 @@ async function deriveFromPhotoMetadata() {
     if (!photoMetadata.coordinates) {
       continue;
     }
-    (Array.isArray(photoMetadata.tags)
-      ? photoMetadata.tags
-      : photoMetadata.tags
-      ? [photoMetadata.tags]
-      : []
-    ).forEach((tag) => {
+    photoMetadata.tags.forEach((tag) => {
       tags.add(tag);
     });
 

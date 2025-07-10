@@ -1,4 +1,4 @@
-const createClient = require('./supabaseClient');
+const createClient = require('./util/supabaseClient');
 const fs = require('fs-extra');
 
 const LOG_FILE = './output/final_log.json';
@@ -20,7 +20,7 @@ const query = (async = async ({table, select = '*'}) => {
   return response;
 });
 
-const main = async () => {
+const main = async (skipPhotoUpsert = false) => {
   const tags = require('../output/tags.json');
   const formattedTags = tags.map((tag) => ({name: tag}));
   const photoMetadata = require('../output/photo_metadata_with_location_id.json');
@@ -31,15 +31,18 @@ const main = async () => {
     tagsResponse.data.map(({id, name}) => [name, id])
   );
 
-  const photoMetadataForTable = photoMetadata.map(
-    ({tags, coordinates, ...rest}) => rest
-  );
+  if (!skipPhotoUpsert) {
+    const photoMetadataForTable = photoMetadata.map(
+      ({tags, coordinates, ...rest}) => rest
+    );
 
-  await upsert({
-    table: 'photo_metadata',
-    conflictKey: 'file_name',
-    data: photoMetadataForTable,
-  });
+    await upsert({
+      table: 'photo_metadata',
+      conflictKey: 'file_name',
+      data: photoMetadataForTable,
+    });
+  }
+
   const photosResponse = await query({
     table: 'photo_metadata',
     select: 'id, file_name',
@@ -49,11 +52,7 @@ const main = async () => {
   );
 
   const photoTags = photoMetadata.reduce((acc, photo) => {
-    const tags = Array.isArray(photo.tags)
-      ? photo.tags
-      : photo.tags
-      ? [photo.tags]
-      : [];
+    const tags = photo.tags;
     const photo_id = photosDictionary[photo.file_name];
     acc = acc.concat(
       tags.map((tag) => ({

@@ -17,6 +17,7 @@ export default async function CategoriesPage() {
               height={200}
               alt={photo.tag_name || ''}
             />
+            {photo.tag_name}
           </Link>
         ) : null
       )}

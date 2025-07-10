@@ -2,7 +2,14 @@ import {getServerClient} from '@/util/supabase/server';
 
 export const getAllTags = async () => {
   const supabase = await getServerClient();
-  return await supabase.from('tags').select('*');
+  const response = await supabase.from('tags').select('*');
+  return {
+    ...response,
+    data: response.data?.reduce((acc, tag) => {
+      acc[tag.id] = tag.name;
+      return acc;
+    }, {}),
+  };
 };
 
 export const getTagsWithHero = async () => {

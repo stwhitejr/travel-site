@@ -1,7 +1,7 @@
-const sharp = require('sharp');
 const fs = require('fs-extra');
 const path = require('path');
 const {exiftool} = require('exiftool-vendored');
+const getImageMetadata = require('./util/getImageMetadata');
 
 const RAW_DIR = './raw_photos';
 const OUT_DIR = './output';
@@ -11,10 +11,6 @@ const META_FILE = OUT_DIR + '/photo_metadata.json';
 const MAX_WIDTH = 1600;
 const MAX_HEIGHT = 1600;
 const JPEG_QUALITY = 85;
-
-const generateCoordinates = (gps) => {
-  return [gps.GPSLatitude, gps.GPSLongitude];
-};
 
 async function processPhotos() {
   await fs.ensureDir(PHOTO_OUTPUT_DIR);
@@ -30,31 +26,19 @@ async function processPhotos() {
     const fileName = path.basename(file, ext);
 
     try {
-      const image = sharp(filePath);
-      const imageMetadata = await exiftool.read(filePath);
-
-      const metadata = {
-        coordinates: generateCoordinates(imageMetadata),
-        camera: imageMetadata.Model,
-        date: imageMetadata.DateTimeCreated,
-        tags: imageMetadata.Keywords,
-        rating: imageMetadata.Rating,
-      };
+      const {image, metadata} = await getImageMetadata(filePath);
 
       if (!metadata.coordinates[0]) {
         continue;
       }
 
-      const orientation =
-        imageMetadata.Orientation === 1 ? 'landscape' : 'portrait';
-
-      if (orientation === 'portrait') {
+      if (metadata.orientation === 'portrait') {
         image.rotate(90);
       }
 
       // Resize while preserving aspect ratio
       const resizedImage = image.resize({
-        ...(orientation === 'landscape'
+        ...(metadata.orientation === 'landscape'
           ? {width: MAX_WIDTH, height: null}
           : {height: MAX_HEIGHT, width: null}),
 
@@ -68,7 +52,6 @@ async function processPhotos() {
 
       metadataList.push({
         file_name: fileName,
-        orientation,
         width: result.width,
         height: result.height,
         ...metadata,
