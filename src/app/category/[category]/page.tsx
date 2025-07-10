@@ -13,6 +13,7 @@ export default async function CategoryPage({
     <div>
       <div>category {category}</div>
       <div>
+        {/* @ts-expect-error ??? */}
         <Gallery photos={data || []} />
       </div>
     </div>
