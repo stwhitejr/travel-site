@@ -7,6 +7,7 @@ export const getLocations = async () => {
   const supabase = await getServerClient();
   return await supabase.from('location').select('*');
 };
+
 export const getLocationById = async (id: number) => {
   const supabase = await getServerClient();
   return await supabase

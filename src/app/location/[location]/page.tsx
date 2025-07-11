@@ -1,6 +1,6 @@
 import {getLocationById} from '@/lib/location';
+import LocationEntry from './LocationEntry';
 import LocationListContainer from '../components/LocationListContainer';
-import Gallery from '@/app/gallery/Gallery';
 
 export default async function Location({
   params,
@@ -10,17 +10,5 @@ export default async function Location({
   const {location} = await params;
   const {data} = await getLocationById(parseInt(location, 10));
 
-  return (
-    <div>
-      <div style={{display: 'flex', height: '50vh'}}>
-        <div style={{width: '50%'}}>
-          <LocationListContainer />
-        </div>
-        <div>
-          <h1>{data?.description}</h1>
-        </div>
-      </div>
-      <Gallery photos={data?.photos || []} />
-    </div>
-  );
+  return <LocationEntry locationList={<LocationListContainer />} {...data} />;
 }

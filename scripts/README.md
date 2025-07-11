@@ -1,4 +1,4 @@
-# Data Creation
+# Data Ingestion
 
 These scripts help convert photos to JSON for DB entries. Below is the process. You can just run `node scripts/main.js` but below breaks down what it's doing.
 
@@ -27,3 +27,9 @@ This step will extract the tags from all the photo metadata and insert it into t
 We will clone the photo metadata list and remove all tags from the entities so that we can then insert all photo metadata into its table. We will then query for all the photo ids and create a photo ID -> photo file_name dictionary.
 
 Then we have all the information we need within the scope of this script to generate photo tags. We will construct this and then upload to database.
+
+## Tagging Photos
+
+The `tagPhotos.js` script can be used to help tag photos in bulk. You should do this before running the above ingestion steps (or `main.js`).
+
+Before you run this script, create folders in the `raw_photos` folder with tag names you want to apply to the photos inside the folders. You can move photos in and out of these folders and re-run the script to apply more than 1 tag to your photos.
