@@ -1,16 +1,25 @@
-import {getServerClient} from '@/util/supabase/server';
+import {SupabaseClient} from '@/util/supabase/client';
 import {Database} from './database.types';
+import {PhotoMetadata} from './photos';
+import {Tag} from './tags';
 
 export type Location = Database['public']['Tables']['location']['Row'];
 
-export const getLocations = async () => {
-  const supabase = await getServerClient();
-  return await supabase.from('location').select('*');
+export interface QueryLocationsByIdOptions {
+  id: number;
+}
+export type LocationByIdResult = Location & {
+  photos: Array<
+    PhotoMetadata & {
+      tags: Array<{tag: Tag}>;
+    }
+  >;
 };
-
-export const getLocationById = async (id: number) => {
-  const supabase = await getServerClient();
-  return await supabase
+export const queryLocationsById = async (
+  supabase: SupabaseClient,
+  {id}: QueryLocationsByIdOptions
+) =>
+  await supabase
     .from('location')
     .select(
       `
@@ -27,4 +36,6 @@ export const getLocationById = async (id: number) => {
     )
     .eq('id', id)
     .single();
-};
+
+export const queryAllLocations = async (supabase: SupabaseClient) =>
+  await supabase.from('location').select('*');

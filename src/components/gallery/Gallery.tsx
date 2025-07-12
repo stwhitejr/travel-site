@@ -25,14 +25,18 @@ export default function Gallery({photos}: {photos: PhotoMetadata[]}) {
           isLandscape ? 'flex-3' : 'flex-1'
         }`}
       >
-        <Image
-          src={getResourceUrl(selectedPhoto.file_name)}
-          alt=""
-          width={selectedPhoto.width}
-          height={selectedPhoto.height}
-          className="object-contain w-full h-full"
-          style={{transition: 'transform 0.3s ease'}}
-        />
+        {selectedPhoto.file_name &&
+          selectedPhoto.width &&
+          selectedPhoto.height && (
+            <Image
+              src={getResourceUrl(selectedPhoto.file_name)}
+              alt=""
+              width={selectedPhoto.width}
+              height={selectedPhoto.height}
+              className="object-contain w-full h-full"
+              style={{transition: 'transform 0.3s ease'}}
+            />
+          )}
       </motion.div>
 
       <motion.div

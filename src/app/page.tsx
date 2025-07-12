@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {getResourceUrl} from './gallery/util';
+import {getResourceUrl} from '@/components/gallery/util';
 import {ReactNode} from 'react';
 import {Image as ImageIcon, MapPin} from 'lucide-react';
 import {anton} from '@/util/fonts';

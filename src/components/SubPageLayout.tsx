@@ -3,9 +3,9 @@ import Header from './Header';
 
 export default function SubPageLayout({children}: {children: ReactNode}) {
   return (
-    <div>
+    <div className="flex flex-col h-[100vh] overflow-y-hidden">
       <Header />
-      <div>{children}</div>
+      <div className="flex-2 relative">{children}</div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import Gallery from '@/app/gallery/Gallery';
+import Gallery from '@/components/gallery/Gallery';
 import {getPhotosByTag} from '@/lib/photos';
 import {getAllTags} from '@/lib/tags';
 import CategoryHeader from './CategoryHeader';

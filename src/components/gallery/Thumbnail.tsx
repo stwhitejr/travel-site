@@ -3,8 +3,17 @@
 import Image from 'next/image';
 import {getResourceUrl} from './util';
 import {motion} from 'framer-motion';
+import {PhotoMetadata} from '@/lib/photos';
 
-export default function Thumbnail({photo, selectedPhoto, onClick}) {
+export default function Thumbnail({
+  photo,
+  selectedPhoto,
+  onClick,
+}: {
+  onClick: () => void;
+  photo: PhotoMetadata;
+  selectedPhoto: PhotoMetadata;
+}) {
   return (
     <motion.div
       key={photo.id}

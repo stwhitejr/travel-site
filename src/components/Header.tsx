@@ -2,13 +2,15 @@
 
 import {anton} from '@/util/fonts';
 import Link from 'next/link';
-import {ReactNode} from 'react';
-import {usePathname} from 'next/navigation';
+import {ReactNode, Suspense} from 'react';
+import {usePathname, useSearchParams} from 'next/navigation';
 
 const HeaderLink = (props: {href: string; children: ReactNode}) => {
+  const searchParams = useSearchParams();
+  const entityId = searchParams.get('id');
   const pathname = usePathname();
 
-  const isActive = pathname === props.href;
+  const isActive = !entityId && pathname === props.href;
   const content = (
     <div
       className={`p-1 px-4 ${
@@ -32,12 +34,14 @@ const Logo = () => {
 
 export default function Header() {
   return (
-    <div className="p-2 px-5 flex justify-between items-center">
-      <Logo />
-      <div className="flex">
-        <HeaderLink href="/location">Locations</HeaderLink>
-        <HeaderLink href="/category">Categories</HeaderLink>
+    <Suspense>
+      <div className="p-2 px-5 flex justify-between items-center">
+        <Logo />
+        <div className="flex">
+          <HeaderLink href="/location">Locations</HeaderLink>
+          <HeaderLink href="/category">Categories</HeaderLink>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }

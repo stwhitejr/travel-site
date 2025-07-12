@@ -2,30 +2,24 @@
 
 import Globe, {LocationMarker, MarkerComponentProps} from '@/app/globe/Globe';
 import Marker from '@/app/globe/Marker';
-import {Location} from '@/lib/location';
 import Link from 'next/link';
-import {useParams} from 'next/navigation';
 import {useMemo} from 'react';
+import useLocations from '../hooks/useLocations';
 
 const MarkerWithLink = (props: MarkerComponentProps) => {
   return (
-    <Link href={`/location/${props.id}`}>
+    <Link href={`/location/?id=${props.id}`}>
       <Marker {...props} />
     </Link>
   );
 };
 
-export default function LocationList({
-  locations,
-}: {
-  locations: Array<Location>;
-}) {
-  const params = useParams<{location: string}>();
+export default function LocationList({id}: {id?: string | number}) {
+  const {data: locations = []} = useLocations();
 
   const markers = useMemo(() => {
     return locations.reduce((acc, location) => {
       if (location.coordinates) {
-        // @ts-expect-error this is checked above
         acc = acc.concat(location);
       }
       return acc;
@@ -35,7 +29,7 @@ export default function LocationList({
   return (
     <Globe
       markers={markers}
-      selectedMarker={parseInt(params.location, 10)}
+      selectedMarker={id}
       MarkerComponent={MarkerWithLink}
     />
   );

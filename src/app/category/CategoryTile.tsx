@@ -1,10 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import {getResourceUrl} from '../gallery/util';
+import {getResourceUrl} from '@/components/gallery/util';
 import {anton} from '@/util/fonts';
+import {HeroTag} from '@/lib/tags';
 
-export default function CategoryTile(props) {
+export default function CategoryTile(props: HeroTag) {
+  if (!props.file_name || !props.tag_name) {
+    return null;
+  }
   const imageUrl = getResourceUrl(props.file_name);
   return (
     <div

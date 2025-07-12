@@ -8,7 +8,7 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export interface MarkerComponentProps {
   id: number;
-  selectedMarker?: number;
+  selectedMarker?: string | number | null;
 }
 
 export type LocationMarker = Omit<Location, 'coordinates'> & {
@@ -18,7 +18,7 @@ export type LocationMarker = Omit<Location, 'coordinates'> & {
 type GlobeProps = {
   markers: Array<LocationMarker>;
   MarkerComponent?: FC<MarkerComponentProps>;
-  selectedMarker?: number;
+  selectedMarker?: string | number | null;
 };
 
 const LOCAL_STORAGE_KEY = 'map-view-state';
@@ -33,7 +33,7 @@ export default function Globe({
 
   const [viewState, setViewState] = useState<ViewState>(() => {
     if (selectedMarker) {
-      const match = markers.find((marker) => marker.id === selectedMarker);
+      const match = markers.find((marker) => marker.id == selectedMarker);
       if (match) {
         return {
           latitude: match.coordinates[0],

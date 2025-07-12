@@ -1,9 +1,10 @@
-import LocationListContainer from './components/LocationListContainer';
+import {Suspense} from 'react';
+import Location from './components/Location';
 
 export default function LocationPage() {
   return (
-    <div style={{height: '100vh', width: '100%'}}>
-      <LocationListContainer />
-    </div>
+    <Suspense>
+      <Location />
+    </Suspense>
   );
 }

@@ -1,20 +1,17 @@
 @layer utilities {
   @keyframes pan-image {
     0% {
-      zoom: 0;
       object-position: top;
     }
-    50% {
-      zoom: 0.5;
+    30% {
       object-position: bottom;
     }
     100% {
-      zoom: 1;
       object-position: center;
     }
   }
 
-  .LocationThumbnail {
-    animation: pan-image 5s ease-in-out forwards;
+  .LocationEntry-hero {
+    animation: pan-image 3s ease-in-out forwards;
   }
 }
