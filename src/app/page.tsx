@@ -24,7 +24,12 @@ export default function Home() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover hidden sm:block"
       >
-        <source src={getResourceUrl('landscape_web', 'mp4')} type="video/mp4" />
+        <source
+          src={getResourceUrl('landscape_web', {
+            ext: 'mp4',
+          })}
+          type="video/mp4"
+        />
       </video>
       <video
         autoPlay
@@ -33,7 +38,10 @@ export default function Home() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover block sm:hidden"
       >
-        <source src={getResourceUrl('portrait_web', 'mp4')} type="video/mp4" />
+        <source
+          src={getResourceUrl('portrait_web', {ext: 'mp4'})}
+          type="video/mp4"
+        />
       </video>
       <div
         className={`w-[50vw] absolute top-1/2 translate-x-1/2 -translate-y-1/2 ${anton.className}`}

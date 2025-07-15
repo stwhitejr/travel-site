@@ -8,7 +8,7 @@ import useLocations from '../hooks/useLocations';
 
 const MarkerWithLink = (props: MarkerComponentProps) => {
   return (
-    <Link href={`/location/?id=${props.id}`}>
+    <Link href={`/location/?id=${props.id}`} onClick={props.onClick}>
       <Marker {...props} />
     </Link>
   );

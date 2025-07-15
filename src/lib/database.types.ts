@@ -41,6 +41,7 @@ export type Database = {
       photo_metadata: {
         Row: {
           camera: string | null;
+          blur: string | null;
           date: string | null;
           file_name: string;
           height: number | null;
@@ -146,6 +147,7 @@ export type Database = {
       top_rated_photo_per_tag: {
         Row: {
           camera: string | null;
+          blur: string | null;
           date: string | null;
           file_name: string | null;
           height: number | null;

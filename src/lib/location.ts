@@ -8,12 +8,11 @@ export type Location = Database['public']['Tables']['location']['Row'];
 export interface QueryLocationsByIdOptions {
   id: number;
 }
+export type LocationPhotoEntry = PhotoMetadata & {
+  tags: Array<{tag: Tag}>;
+};
 export type LocationByIdResult = Location & {
-  photos: Array<
-    PhotoMetadata & {
-      tags: Array<{tag: Tag}>;
-    }
-  >;
+  photos: Array<LocationPhotoEntry>;
 };
 export const queryLocationsById = async (
   supabase: SupabaseClient,

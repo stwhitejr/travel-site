@@ -1,7 +1,7 @@
 import Gallery from '@/components/gallery/Gallery';
 import {getPhotosByTag} from '@/lib/photos';
 import {getAllTags} from '@/lib/tags';
-import CategoryHeader from './CategoryHeader';
+import SubHeader from '@/components/SubHeader';
 
 export default async function CategoryPage({
   params,
@@ -14,11 +14,11 @@ export default async function CategoryPage({
   const tagName = tagsResponse.data[category];
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <div>
-        <CategoryHeader categoryName={tagName} />
+        <SubHeader backHref="/category" currentTitle={tagName} />
       </div>
-      <div className="px-5">
+      <div className="px-5 flex-1 h-full">
         <Gallery photos={data || []} />
       </div>
     </div>

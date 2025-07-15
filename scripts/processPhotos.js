@@ -6,6 +6,7 @@ const getImageMetadata = require('./util/getImageMetadata');
 const RAW_DIR = './raw_photos';
 const OUT_DIR = './output';
 const PHOTO_OUTPUT_DIR = OUT_DIR + '/photos';
+const THUMBNAIL_OUTPUT_DIR = PHOTO_OUTPUT_DIR + '/thumbnails';
 const META_FILE = OUT_DIR + '/photo_metadata.json';
 
 const MAX_WIDTH = 1600;
@@ -14,6 +15,7 @@ const JPEG_QUALITY = 85;
 
 async function processPhotos() {
   await fs.ensureDir(PHOTO_OUTPUT_DIR);
+  await fs.ensureDir(THUMBNAIL_OUTPUT_DIR);
   const files = await fs.readdir(RAW_DIR);
   const metadataList = [];
 
@@ -50,10 +52,23 @@ async function processPhotos() {
         .jpeg({quality: JPEG_QUALITY})
         .toFile(outputPath);
 
+      // Create thumbnail version
+      image
+        .resize(300)
+        .toFormat('webp', {quality: 60})
+        .toFile(path.join(THUMBNAIL_OUTPUT_DIR, `${fileName}.webp`));
+
+      // Generate blur data
+      const blurBuffer = await image.resize(10).blur().toBuffer();
+      const blurBase64 = `data:image/jpeg;base64,${blurBuffer.toString(
+        'base64'
+      )}`;
+
       metadataList.push({
         file_name: fileName,
         width: result.width,
         height: result.height,
+        blur: blurBase64,
         ...metadata,
       });
 

@@ -4,54 +4,95 @@ import {PhotoMetadata} from '@/lib/photos';
 import Image from 'next/image';
 import {getResourceUrl} from './util';
 import {motion} from 'framer-motion';
-import Thumbnail from './Thumbnail';
 import useGallery from './useGallery';
+import './Gallery.css';
 
-export default function Gallery({photos}: {photos: PhotoMetadata[]}) {
-  const {selectedPhoto, isLandscape, setSelectedPhotoIndex} =
-    useGallery(photos);
+const getGridItemClass = (index: number) => {
+  switch (index) {
+    case 0:
+      return 'md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-3';
+    case 3:
+      return 'md:col-start-5 md:col-end-6 md:row-start-1 md:row-end-3';
+    case 4:
+      return 'md:col-start-3 md:col-end-5 md:row-start-2 md:row-end-3';
+
+    default:
+      return '';
+  }
+};
+
+export default function Gallery({
+  photos,
+  onClick,
+}: {
+  photos: PhotoMetadata[];
+  onClick?: (arg: number | null) => void;
+}) {
+  const {selectedPhoto, setSelectedPhotoIndex} = useGallery(photos);
+
+  const handleClick = (index: number | null) => {
+    setSelectedPhotoIndex(index);
+    onClick?.(index);
+  };
 
   return (
-    <motion.div
-      layout
-      className={`flex ${
-        !isLandscape ? 'flex-row' : 'flex-col'
-      } gap-4 transition-all duration-500`}
-      style={{height: '85vh'}}
+    <div
+      // TODO: change grid based on total photos count?
+      className={`grid grid-cols-2 md:grid-cols-5 gap-2 h-full`}
     >
-      <motion.div
-        layout
-        className={`relative rounded overflow-hidden ${
-          isLandscape ? 'flex-3' : 'flex-1'
-        }`}
-      >
-        {selectedPhoto.file_name &&
-          selectedPhoto.width &&
-          selectedPhoto.height && (
+      {[
+        ...photos,
+        ...photos,
+        ...photos,
+        ...photos,
+        ...photos,
+        ...photos,
+        ...photos,
+        ...photos,
+      ].map((photo, index) => {
+        const isSelected =
+          selectedPhoto?.id === photo.id && index < photos.length;
+        const priority = index <= 5;
+        return (
+          <motion.div
+            layout
+            key={index}
+            className={`${
+              isSelected
+                ? 'row-span-2 col-span-2 md:row-span-4 md:col-span-3 h-[100vh] md:h-auto'
+                : !selectedPhoto
+                ? getGridItemClass(index)
+                : ''
+            } relative `}
+            style={{minHeight: '120px'}}
+          >
             <Image
-              src={getResourceUrl(selectedPhoto.file_name)}
-              alt=""
-              width={selectedPhoto.width}
-              height={selectedPhoto.height}
-              className="object-contain w-full h-full"
-              style={{transition: 'transform 0.3s ease'}}
+              // TODO: use actual thumbnail images (smaller)
+              src={getResourceUrl(
+                photo.file_name,
+                isSelected || priority
+                  ? undefined
+                  : {
+                      isThumbnail: true,
+                      ext: 'webp',
+                    }
+              )}
+              priority={priority}
+              alt={photo.file_name}
+              fill
+              className={`cursor-pointer rounded opacity-50 hover:opacity-100 ${
+                isSelected
+                  ? 'Gallery-selectedPhoto opacity-100 object-contain'
+                  : 'object-cover'
+              }`}
+              onClick={() => handleClick(isSelected ? null : index)}
+              {...(photo.blur
+                ? {placeholder: 'blur', blurDataURL: photo.blur}
+                : {})}
             />
-          )}
-      </motion.div>
-
-      <motion.div
-        layout
-        className="flex gap-2 flex-wrap  flex-1 self-center justify-center"
-      >
-        {photos.map((photo, index) => (
-          <Thumbnail
-            key={photo.id}
-            photo={photo}
-            selectedPhoto={selectedPhoto}
-            onClick={() => setSelectedPhotoIndex(index)}
-          />
-        ))}
-      </motion.div>
-    </motion.div>
+          </motion.div>
+        );
+      })}
+    </div>
   );
 }

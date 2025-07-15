@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useRef, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, {Marker, ViewState, MapRef} from 'react-map-gl/mapbox';
 import {Location} from '@/lib/location';
@@ -8,6 +8,7 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export interface MarkerComponentProps {
   id: number;
+  onClick: () => void;
   selectedMarker?: string | number | null;
 }
 
@@ -23,6 +24,23 @@ type GlobeProps = {
 
 const LOCAL_STORAGE_KEY = 'map-view-state';
 
+const getGlobeCoordinatesBySelectedMarker = (
+  markers: GlobeProps['markers'],
+  selectedMarker: GlobeProps['selectedMarker']
+) => {
+  const match = markers.find((marker) => marker.id == selectedMarker);
+  if (match) {
+    return {
+      latitude: match.coordinates[0],
+      longitude: match.coordinates[1],
+      zoom: 10,
+      bearing: 0,
+      pitch: 0,
+    } as ViewState;
+  }
+  return null;
+};
+
 export default function Globe({
   markers,
   MarkerComponent = VisualMarker,
@@ -31,17 +49,15 @@ export default function Globe({
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
   const mapRef = useRef<MapRef>(null);
 
+  const [clickedFromMap, setClickedFromMap] = useState(false);
   const [viewState, setViewState] = useState<ViewState>(() => {
     if (selectedMarker) {
-      const match = markers.find((marker) => marker.id == selectedMarker);
-      if (match) {
-        return {
-          latitude: match.coordinates[0],
-          longitude: match.coordinates[1],
-          zoom: 10,
-          bearing: 0,
-          pitch: 0,
-        };
+      const result = getGlobeCoordinatesBySelectedMarker(
+        markers,
+        selectedMarker
+      );
+      if (result) {
+        return result;
       }
     }
     if (typeof window !== 'undefined') {
@@ -56,6 +72,25 @@ export default function Globe({
       pitch: 0,
     };
   });
+
+  /**
+   * If we changed location via the map don't adjust the view
+   * If we changed location via browser or subheader next/back then recenter the map on the current location
+   */
+  useEffect(() => {
+    if (!clickedFromMap) {
+      const result = getGlobeCoordinatesBySelectedMarker(
+        markers,
+        selectedMarker
+      );
+      if (result) {
+        setViewState(result);
+      }
+    } else {
+      setClickedFromMap(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMarker]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMove = useCallback((evt: any) => {
@@ -87,7 +122,11 @@ export default function Globe({
           longitude={coordinates[1]}
           anchor="bottom"
         >
-          <MarkerComponent selectedMarker={selectedMarker} id={id} />
+          <MarkerComponent
+            selectedMarker={selectedMarker}
+            id={id}
+            onClick={() => setClickedFromMap(true)}
+          />
         </Marker>
       ))}
     </Map>
