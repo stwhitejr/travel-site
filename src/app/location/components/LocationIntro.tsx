@@ -29,12 +29,15 @@ export default function LocationIntro({
   const resizeButton = (
     <ResizeIcon
       onClick={() => onClickResize?.(!condensed)}
-      className="absolute top-5 right-5 opacity-80 hover:opacity-100 cursor-pointer w-5"
+      className="hidden md:block absolute top-5 right-5 opacity-80 hover:opacity-100 cursor-pointer w-5"
     />
   );
 
   return (
-    <motion.div layout className="flex h-full relative">
+    <motion.div
+      layout
+      className="flex flex-col-reverse md:flex-row h-full relative"
+    >
       {condensed ? (
         <>
           {list}
@@ -43,7 +46,7 @@ export default function LocationIntro({
       ) : (
         <>
           <div className="flex-1">{list}</div>
-          <div className="flex-1 h-full flex flex-col justify-between px-4 py-1">
+          <div className="flex-1 h-full flex flex-row md:flex-col justify-between px-4 pt-4 md:pt-2">
             <div className="max-w-[400px]">
               <h1 className={`${anton.className} pb-1 text-3xl`}>
                 {location.title}
