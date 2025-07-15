@@ -52,7 +52,7 @@ export default function Gallery({
       ].map((photo, index) => {
         const isSelected =
           selectedPhoto?.id === photo.id && index < photos.length;
-        // const priority = index <= 5;
+        const priority = index <= 5;
         return (
           <motion.div
             layout
@@ -70,8 +70,7 @@ export default function Gallery({
               // TODO: use actual thumbnail images (smaller)
               src={getResourceUrl(
                 photo.file_name,
-                // isSelected || priority
-                isSelected
+                isSelected || priority
                   ? undefined
                   : {
                       isThumbnail: true,
