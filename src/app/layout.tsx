@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/components/query/QueryProvider';
+import {SUPABASE_PROJECT_DOMAIN} from '@/components/gallery/util';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -25,6 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href={SUPABASE_PROJECT_DOMAIN} />
+        <link rel="dns-prefetch" href={SUPABASE_PROJECT_DOMAIN} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
