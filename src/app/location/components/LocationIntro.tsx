@@ -45,22 +45,23 @@ export default function LocationIntro({
         </>
       ) : (
         <>
-          <div className="flex-1">{list}</div>
-          <div className="flex-1 h-full flex flex-row md:flex-col justify-between px-4 pt-4 md:pt-2">
+          <div className="flex-2 md:flex-1">{list}</div>
+          <div className="flex-1 h-full flex flex-row md:flex-col justify-between p-4">
             <div className="max-w-[400px]">
-              <h1 className={`${anton.className} pb-1 text-3xl`}>
+              <h1 className={`${anton.className} md:text-2xl`}>
                 {location.title}
               </h1>
-              <h2 className={`${lato.className}`}>{location.address}</h2>
-              <div className="flex items-center pt-1">
+              <h2 className={`${lato.className} text-sm md:text-base`}>
+                {location.address}
+              </h2>
+              <div className="flex items-center pt-2">
                 <a
                   target="_blank"
                   href={`https://www.google.com/maps/search/${location.coordinates?.join(
                     ','
                   )}`}
-                  className="text-yellow-100"
                 >
-                  <MapPinnedIcon />
+                  <MapPinnedIcon className="w-5" />
                 </a>
                 <div
                   onClick={handleClickCoordinates}

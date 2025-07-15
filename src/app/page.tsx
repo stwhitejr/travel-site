@@ -2,12 +2,13 @@ import Link from 'next/link';
 import {getResourceUrl} from '@/components/gallery/util';
 import {ReactNode} from 'react';
 import {Image as ImageIcon, MapPin} from 'lucide-react';
-import {anton} from '@/util/fonts';
+import {anton, lato} from '@/util/fonts';
+import Image from 'next/image';
 
 const PageLink = (props: {href: string; children: ReactNode}) => {
   return (
     <Link href={props.href}>
-      <div className="p-4 px-8 bg-emerald-700 rounded-sm m-2 hover:bg-emerald-900">
+      <div className="p-4 px-8 uppercase bg-gray-700 opacity-80 hover:opacity-100 rounded-sm m-2 ">
         {props.children}
       </div>
     </Link>
@@ -46,7 +47,16 @@ export default function Home() {
       <div
         className={`w-[50vw] absolute top-1/2 translate-x-1/2 -translate-y-1/2 ${anton.className}`}
       >
-        <div className="mb-4 text-white text-5xl sm:text-7xl text-center drop-shadow-lg">
+        <Image
+          src="/logo.png"
+          width={100}
+          height={50}
+          alt="Freewheelin’"
+          className="m-auto mb-2 opacity-80"
+        />
+        <div
+          className={`mb-2 uppercase text-white text-5xl sm:text-4xl text-center drop-shadow-lg tracking-widest ${lato.className} `}
+        >
           Explore
         </div>
         <div className="flex justify-center">

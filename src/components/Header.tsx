@@ -1,9 +1,10 @@
 'use client';
 
-import {anton} from '@/util/fonts';
+import {anton, lato, playwrite} from '@/util/fonts';
 import Link from 'next/link';
 import {ReactNode, Suspense} from 'react';
 import {usePathname, useSearchParams} from 'next/navigation';
+import Image from 'next/image';
 
 const HeaderLink = (props: {href: string; children: ReactNode}) => {
   const searchParams = useSearchParams();
@@ -13,9 +14,11 @@ const HeaderLink = (props: {href: string; children: ReactNode}) => {
   const isActive = !entityId && pathname === props.href;
   const content = (
     <div
-      className={`p-1 px-4 ${
-        isActive ? 'font-bold' : 'bg-emerald-700 hover:bg-emerald-900'
-      }  rounded-sm m-1 `}
+      className={`${anton.className}  uppercase  tracking-wider p-1 px-4  ${
+        isActive
+          ? 'bg-slate-800 text-amber-100'
+          : 'hover:bg-slate-800 hover:text-amber-100 text-slate-100'
+      }  rounded-sm  `}
     >
       {props.children}
     </div>
@@ -26,8 +29,26 @@ const HeaderLink = (props: {href: string; children: ReactNode}) => {
 
 const Logo = () => {
   return (
-    <div className={`${anton.className}`}>
-      <Link href="/">Freewheelin</Link>
+    <div
+      className={`${playwrite.className} flex gap-3 items-end  text-white  relative`}
+    >
+      <Image
+        src="/logo.png"
+        width={80}
+        height={50}
+        alt="Freewheelin"
+        className=""
+      />
+      <div>
+        <Link className="text-2xl" href="/">
+          Freewheelin
+        </Link>
+        <div
+          className={`${lato.className} mt-[-2px] opacity-70 text-xs tracking-wider`}
+        >
+          because i can
+        </div>
+      </div>
     </div>
   );
 };
@@ -35,9 +56,9 @@ const Logo = () => {
 export default function Header() {
   return (
     <Suspense>
-      <div className="p-2 px-5 flex justify-between items-center">
+      <div className="py-4 px-5 flex justify-between items-center  text-black">
         <Logo />
-        <div className="flex">
+        <div className="flex gap-2">
           <HeaderLink href="/location">Locations</HeaderLink>
           <HeaderLink href="/category">Categories</HeaderLink>
         </div>

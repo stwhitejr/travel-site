@@ -14,11 +14,11 @@ export default async function CategoryPage({
   // const tagName = tagsResponse.data[category];
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full md:overflow-y-hidden">
       <div>
         <SubHeader backHref="/category" />
       </div>
-      <div className="px-5 flex-1 h-full">
+      <div className="m-2 flex-1 h-full md:overflow-y-auto">
         <Gallery photos={data || []} />
       </div>
     </div>
