@@ -5,7 +5,8 @@ import Image from 'next/image';
 import {getResourceUrl} from './util';
 import {motion} from 'framer-motion';
 import './GalleryItem.css';
-import {RefObject, useEffect, useRef} from 'react';
+import {RefObject, useCallback, useEffect, useRef} from 'react';
+import {useInView} from 'react-intersection-observer';
 
 const getGridItemClass = (index: number) => {
   switch (index) {
@@ -36,20 +37,30 @@ export default function GalleryItem({
   onClick: (index: number | null) => void;
   galleryParentRef?: RefObject<HTMLDivElement>;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const {ref: inViewRef, inView} = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  // Assign multi refs
+  const setRefs = useCallback(
+    (node: HTMLDivElement) => {
+      ref.current = node;
+      inViewRef(node);
+    },
+    [inViewRef]
+  );
+
   const previousScrollData = useRef({elementType: 'window', to: null} as {
     elementType: 'window' | 'ref';
     to: number | null;
   });
-  const ref = useRef<HTMLDivElement>(null);
+
   const priority = index <= 5;
 
   useEffect(() => {
     if (isSelected) {
-      console.log(
-        'galleryParentRef?.current.scrollTop',
-        galleryParentRef?.current.scrollTop,
-        window.scrollY
-      );
       previousScrollData.current = {
         elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
         to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
@@ -71,7 +82,7 @@ export default function GalleryItem({
 
   return (
     <motion.div
-      ref={ref}
+      ref={setRefs}
       layout
       className={`${
         isSelected
@@ -82,26 +93,30 @@ export default function GalleryItem({
       } relative `}
       style={{minHeight: '120px'}}
     >
-      <Image
-        src={getResourceUrl(
-          photo.file_name,
-          isSelected || priority
-            ? undefined
-            : {
-                isThumbnail: true,
-                ext: 'webp',
-              }
-        )}
-        alt={photo.file_name}
-        fill
-        className={`cursor-pointer rounded opacity-50 hover:opacity-100 ${
-          isSelected
-            ? 'GalleryItem-selectedPhoto opacity-100 object-contain'
-            : 'object-cover'
-        }`}
-        onClick={() => onClick(isSelected ? null : index)}
-        {...(photo.blur ? {placeholder: 'blur', blurDataURL: photo.blur} : {})}
-      />
+      {inView && (
+        <Image
+          src={getResourceUrl(
+            photo.file_name,
+            isSelected || priority
+              ? undefined
+              : {
+                  isThumbnail: true,
+                  ext: 'webp',
+                }
+          )}
+          alt={photo.file_name}
+          fill
+          className={`cursor-pointer rounded opacity-50 hover:opacity-100 ${
+            isSelected
+              ? 'GalleryItem-selectedPhoto opacity-100 object-contain'
+              : 'object-cover'
+          }`}
+          onClick={() => onClick(isSelected ? null : index)}
+          {...(photo.blur
+            ? {placeholder: 'blur', blurDataURL: photo.blur}
+            : {})}
+        />
+      )}
     </motion.div>
   );
 }
