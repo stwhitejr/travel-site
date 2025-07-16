@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import {ReactNode, useMemo} from 'react';
 
-const iconsByTagName: Record<string, typeof BikeIcon> = {
+export const iconsByTagName: Record<string, typeof BikeIcon> = {
   'mountain biking': BikeIcon,
   king: DogIcon,
   camp: TentIcon,

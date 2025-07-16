@@ -1,6 +1,6 @@
 import {getTagsWithHero} from '@/lib/tags';
 import Link from 'next/link';
-import CategoryTile from './CategoryTile';
+import CategoryTile from './components/CategoryTile';
 
 export default async function CategoriesPage() {
   const {data} = await getTagsWithHero();

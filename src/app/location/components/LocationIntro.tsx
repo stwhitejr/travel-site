@@ -34,10 +34,7 @@ export default function LocationIntro({
   );
 
   return (
-    <motion.div
-      layout
-      className="flex flex-col-reverse md:flex-row h-full relative"
-    >
+    <motion.div layout className="flex flex-col md:flex-row h-full relative">
       {condensed ? (
         <>
           {list}

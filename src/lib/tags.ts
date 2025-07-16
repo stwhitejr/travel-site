@@ -5,13 +5,7 @@ export type Tag = Database['public']['Tables']['tags']['Row'];
 export const getAllTags = async () => {
   const supabase = await getServerClient();
   const response = await supabase.from('tags').select('*');
-  return {
-    ...response,
-    data: response.data?.reduce((acc, tag) => {
-      acc[tag.id] = tag.name;
-      return acc;
-    }, {}),
-  };
+  return response;
 };
 
 export type HeroTag =

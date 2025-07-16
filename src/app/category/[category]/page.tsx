@@ -1,7 +1,8 @@
-import Gallery from '@/components/gallery/Gallery';
 import {getPhotosByTag} from '@/lib/photos';
-// import {getAllTags} from '@/lib/tags';
+import {getAllTags} from '@/lib/tags';
 import SubHeader from '@/components/SubHeader';
+import CategoryRelativeNavigation from '../components/CateogoryRelativeNavigation';
+import Category from '../components/Category';
 
 export default async function CategoryPage({
   params,
@@ -10,17 +11,24 @@ export default async function CategoryPage({
 }) {
   const {category} = await params;
   const {data} = await getPhotosByTag(parseInt(category, 10));
-  // const tagsResponse = await getAllTags();
-  // const tagName = tagsResponse.data[category];
+  const tagsResponse = await getAllTags();
+
+  const getCategoryName = () => {
+    const match = (tagsResponse.data || []).find((tag) => tag.id == category);
+    return match?.name || category;
+  };
 
   return (
     <div className="flex flex-col h-full md:overflow-y-hidden">
       <div>
-        <SubHeader backHref="/category" />
+        <SubHeader>
+          <CategoryRelativeNavigation
+            tags={tagsResponse.data || []}
+            id={parseInt(category, 10)}
+          />
+        </SubHeader>
       </div>
-      <div className="m-2 flex-1 h-full md:overflow-y-auto">
-        <Gallery photos={data || []} />
-      </div>
+      <Category photos={data || []} categoryName={getCategoryName()} />
     </div>
   );
 }

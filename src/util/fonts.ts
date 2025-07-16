@@ -1,4 +1,4 @@
-import {Anton, Lato, Playwrite_IE} from 'next/font/google';
+import {Anton, Lato, Noto_Serif, Playwrite_IE} from 'next/font/google';
 
 export const anton = Anton({
   subsets: ['latin'],
@@ -15,4 +15,10 @@ export const lato = Lato({
 export const playwrite = Playwrite_IE({
   weight: '300',
   variable: '--font-playwrite',
+});
+
+export const noto = Noto_Serif({
+  subsets: ['latin'],
+  weight: '500',
+  variable: '--font-notoSerif',
 });

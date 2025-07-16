@@ -1,9 +1,6 @@
 import {useMemo} from 'react';
 import useLocations from '../hooks/useLocations';
-import Link from 'next/link';
-import {ChevronRightIcon, ChevronLeftIcon} from 'lucide-react';
-
-const linkClasses = `text-sm hover:underline`;
+import {SubHeaderLink} from '@/components/SubHeader';
 
 export default function LocationRelativeNavigation({id}: {id: number}) {
   const {data: locations = []} = useLocations();
@@ -20,17 +17,17 @@ export default function LocationRelativeNavigation({id}: {id: number}) {
   }, [locations, id]);
 
   return (
-    <div className="flex gap-4 items-center">
+    <>
       {previous && (
-        <Link href={`/location?id=${previous.id}`} className={linkClasses}>
-          <ChevronLeftIcon className="inline w-3" /> {previous.title}
-        </Link>
+        <SubHeaderLink dir="left" href={`/location?id=${previous.id}`}>
+          {previous.title}
+        </SubHeaderLink>
       )}
       {next && (
-        <Link href={`/location?id=${next.id}`} className={linkClasses}>
-          {next.title} <ChevronRightIcon className="inline w-3" />
-        </Link>
+        <SubHeaderLink dir="right" href={`/location?id=${next.id}`}>
+          {next.title}
+        </SubHeaderLink>
       )}
-    </div>
+    </>
   );
 }

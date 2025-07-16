@@ -1,6 +1,6 @@
 'use client';
 
-import {anton, lato, playwrite} from '@/util/fonts';
+import {anton, noto, playwrite} from '@/util/fonts';
 import Link from 'next/link';
 import {ReactNode, Suspense} from 'react';
 import {usePathname, useSearchParams} from 'next/navigation';
@@ -16,8 +16,8 @@ const HeaderLink = (props: {href: string; children: ReactNode}) => {
     <div
       className={`${anton.className}  uppercase  tracking-wider p-1 px-4  ${
         isActive
-          ? 'bg-slate-800 text-amber-100'
-          : 'hover:bg-slate-800 hover:text-amber-100 text-slate-100'
+          ? 'bg-[#354754] text-amber-100'
+          : 'hover:bg-[#354754] hover:text-amber-50 text-slate-100'
       }  rounded-sm  `}
     >
       {props.children}
@@ -29,34 +29,34 @@ const HeaderLink = (props: {href: string; children: ReactNode}) => {
 
 const Logo = () => {
   return (
-    <div
-      className={`${playwrite.className} flex gap-3 items-end  text-white  relative`}
-    >
-      <Image
-        src="/logo.png"
-        width={80}
-        height={50}
-        alt="Freewheelin"
-        className=""
-      />
-      <div>
-        <Link className="text-2xl" href="/">
-          Freewheelin
-        </Link>
-        <div
-          className={`${lato.className} mt-[-2px] opacity-70 text-xs tracking-wider`}
-        >
-          because i can
+    <Link className="text-2xl" href="/">
+      <div
+        className={`${playwrite.className} flex gap-3 items-end  text-white  relative`}
+      >
+        <Image
+          src="/logo.png"
+          width={80}
+          height={50}
+          alt="Freewheelin"
+          className=""
+        />
+        <div>
+          <div className="text-2xl">Freewheelin</div>
+          <div
+            className={`${noto.className} mt-[-2px] opacity-50 text-xs lowercase text-center text-amber-100`}
+          >
+            the journey
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
 export default function Header() {
   return (
     <Suspense>
-      <div className="py-4 px-5 flex justify-between items-center  text-black">
+      <div className="py-4 px-5 flex flex-col md:flex-row gap-3 justify-between items-center  text-black">
         <Logo />
         <div className="flex gap-2">
           <HeaderLink href="/location">Locations</HeaderLink>

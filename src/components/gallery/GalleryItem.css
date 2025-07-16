@@ -8,6 +8,6 @@
   }
 }
 
-.Gallery-selectedPhoto {
+.GalleryItem-selectedPhoto {
   animation: initial-load 0.5s ease-in-out;
 }
