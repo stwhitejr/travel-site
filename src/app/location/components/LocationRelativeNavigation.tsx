@@ -2,6 +2,9 @@ import {useMemo} from 'react';
 import useLocations from '../hooks/useLocations';
 import {SubHeaderLink} from '@/components/SubHeader';
 
+const truncateText = (text: string, cutOff = 15) =>
+  text.length > cutOff ? `${text.slice(0, cutOff)}...` : text;
+
 export default function LocationRelativeNavigation({id}: {id: number}) {
   const {data: locations = []} = useLocations();
   const {previous, next} = useMemo(() => {
@@ -20,12 +23,12 @@ export default function LocationRelativeNavigation({id}: {id: number}) {
     <>
       {previous && (
         <SubHeaderLink dir="left" href={`/location?id=${previous.id}`}>
-          {previous.title}
+          {truncateText(previous.title)}
         </SubHeaderLink>
       )}
       {next && (
         <SubHeaderLink dir="right" href={`/location?id=${next.id}`}>
-          {next.title}
+          {truncateText(next.title)}
         </SubHeaderLink>
       )}
     </>

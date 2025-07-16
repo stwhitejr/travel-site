@@ -29,7 +29,7 @@ export const SubHeaderLink = ({
 export default function SubHeader({children}: {children?: ReactNode}) {
   return (
     <div
-      className={`flex px-5 py-2 items-center justify-between bg-[#141518] ${lato.className}`}
+      className={`flex p-2 items-center justify-between bg-[#141518] ${lato.className}`}
     >
       {children}
     </div>

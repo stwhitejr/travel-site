@@ -21,13 +21,13 @@ export default function LocationEntry({
   const [isCondensed, setIsCondensed] = useState<null | boolean>(null);
 
   return (
-    <div className="h-full md:overflow-y-hidden flex flex-col">
+    <div className="md:h-full md:overflow-y-hidden flex flex-col">
       <SubHeader>
         <LocationRelativeNavigation id={props.id} />
       </SubHeader>
 
-      <div className="h-full md:overflow-y-hidden">
-        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40%] md:h-[30%]'}`}>
+      <div className="md:h-full  md:overflow-y-hidden">
+        <div className={`${isCondensed ? 'h-[15%]' : 'h-[30vh] md:h-[30%]'}`}>
           <LocationIntro
             condensed={!!isCondensed}
             location={props}
@@ -38,12 +38,12 @@ export default function LocationEntry({
 
         <div
           className={`flex p-[10px] md:overflow-y-hidden ${
-            isCondensed ? 'h-[85%]' : 'h-[60%] md:h-[70%]'
+            isCondensed ? 'h-[85%]' : 'md:h-[70%]'
           }`}
         >
           <div
             ref={galleryParentRef}
-            className="flex-1 h-full md:overflow-y-auto"
+            className="flex-1 md:h-full md:overflow-y-auto"
           >
             {isLoading ? (
               <LoaderPinwheel

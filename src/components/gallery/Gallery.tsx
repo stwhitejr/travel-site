@@ -24,20 +24,8 @@ export default function Gallery({
   };
 
   return (
-    <div
-      // TODO: change grid based on total photos count?
-      className={`grid grid-cols-2 md:grid-cols-5 gap-2 h-full`}
-    >
-      {[
-        ...photos,
-        ...photos,
-        ...photos,
-        ...photos,
-        ...photos,
-        ...photos,
-        ...photos,
-        ...photos,
-      ].map((photo, index) => {
+    <div className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}>
+      {photos.map((photo, index) => {
         const isSelected =
           selectedPhoto?.id === photo.id && index < photos.length;
 

@@ -65,6 +65,7 @@ export default function GalleryItem({
         elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
         to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
       };
+
       ref.current?.scrollIntoView({behavior: 'smooth'});
     } else if (previousScrollData.current.to !== null) {
       console.log('previousScrollData', previousScrollData);
@@ -108,7 +109,7 @@ export default function GalleryItem({
           fill
           className={`cursor-pointer rounded hover:grayscale-0 md:opacity-80 hover:opacity-100 ${
             isSelected
-              ? 'GalleryItem-selectedPhoto opacity-100 object-contain'
+              ? ' opacity-100 object-contain'
               : 'object-cover grayscale'
           }`}
           onClick={() => onClick(isSelected ? null : index)}
