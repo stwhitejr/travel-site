@@ -43,7 +43,7 @@ const Logo = () => {
         <div>
           <div className="text-2xl">Freewheelin</div>
           <div
-            className={`${noto.className} mt-[-2px] opacity-50 text-xs lowercase text-center text-amber-100`}
+            className={`${noto.className} mt-[-2px] opacity-50 text-xs lowercase text-center text-amber-50`}
           >
             the journey
           </div>
@@ -56,9 +56,9 @@ const Logo = () => {
 export default function Header() {
   return (
     <Suspense>
-      <div className="py-4 px-5 flex flex-col md:flex-row gap-3 justify-between items-center  text-black">
+      <div className="py-4 pb-3 md:pb-4 px-5 flex flex-col md:flex-row gap-3 justify-between items-center  text-black">
         <Logo />
-        <div className="flex gap-2">
+        <div className="flex gap-1 pt-1 md:pt-0">
           <HeaderLink href="/location">Locations</HeaderLink>
           <HeaderLink href="/category">Categories</HeaderLink>
         </div>

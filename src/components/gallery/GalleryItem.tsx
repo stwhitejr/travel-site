@@ -106,10 +106,10 @@ export default function GalleryItem({
           )}
           alt={photo.file_name}
           fill
-          className={`cursor-pointer rounded opacity-50 hover:opacity-100 ${
+          className={`cursor-pointer rounded hover:grayscale-0 md:opacity-80 hover:opacity-100 ${
             isSelected
               ? 'GalleryItem-selectedPhoto opacity-100 object-contain'
-              : 'object-cover'
+              : 'object-cover grayscale'
           }`}
           onClick={() => onClick(isSelected ? null : index)}
           {...(photo.blur

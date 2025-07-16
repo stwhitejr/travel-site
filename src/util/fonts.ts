@@ -19,6 +19,6 @@ export const playwrite = Playwrite_IE({
 
 export const noto = Noto_Serif({
   subsets: ['latin'],
-  weight: '500',
+  weight: '300',
   variable: '--font-notoSerif',
 });

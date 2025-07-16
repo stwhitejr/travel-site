@@ -9,7 +9,7 @@ export default function CategoryTitleDisplay({
   const Icon = iconsByTagName[categoryName];
   return (
     <div
-      className={`w-full h-full bg-[#354754] rounded flex items-center justify-center gap-1 text-3xl px-2 overflow-hidden ${anton.className} text-amber-50 opacity-70 hover:opacity-100`}
+      className={`w-full h-full bg-[#354754] rounded flex items-center justify-center gap-1 text-3xl px-2 overflow-hidden ${anton.className} text-amber-50 opacity-90`}
     >
       {categoryName}
       {Icon && <Icon size={100} />}
