@@ -1,3 +1,5 @@
+This scripts are setup to be run from the root of the repo.
+
 # Data Ingestion
 
 These scripts help convert photos to JSON for DB entries. Below is the process. You can just run `node scripts/main.js` but below breaks down what it's doing.
@@ -28,8 +30,20 @@ We will clone the photo metadata list and remove all tags from the entities so t
 
 Then we have all the information we need within the scope of this script to generate photo tags. We will construct this and then upload to database.
 
+# Helpers
+
 ## Tagging Photos
 
-The `tagPhotos.js` script can be used to help tag photos in bulk. You should do this before running the above ingestion steps (or `main.js`).
+### Tag Photos via Folders
+
+The `tagPhotosViaTagFolders.js` script can be used to help tag photos in bulk. You should do this before running the above ingestion steps (or `main.js`) or you can run `upsertTagsOnly.js` to only upload any new tags entities and photo tag associations. If you use this script then the photo metadata must already exist in the DB.
 
 Before you run this script, create folders in the `raw_photos` folder with tag names you want to apply to the photos inside the folders. You can move photos in and out of these folders and re-run the script to apply more than 1 tag to your photos.
+
+### Tag Photos via AI Model
+
+The `gen_tags/` folder contains a python script that will attempt to determine if a label is appropriate for a photo. It will generate an `output/labels_by_filename.json` file. Before you can run the `gen_tags/main.py` you must first download the model using `python gen_tags/download.py`. You have 2 options on how to proceed with this newly generated data.
+
+1. You can uncomment some code within `util/getImageMetadata.js` and merge these tags into the image metadata. This means the tags will not be written to the actual photo files but just used during the ingestion process.
+
+2. You can uncomment some code within `util/getImageMetadata.js` and run `tagPhotosViaJsonFile.js` to actually write these tags to the photos metadata.

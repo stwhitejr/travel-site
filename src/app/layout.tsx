@@ -25,13 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <link rel="preconnect" href={SUPABASE_PROJECT_DOMAIN} />
         <link rel="dns-prefetch" href={SUPABASE_PROJECT_DOMAIN} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         <QueryProvider>{children}</QueryProvider>
       </body>

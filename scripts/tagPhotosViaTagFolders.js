@@ -6,7 +6,7 @@ const getImageMetadata = require('./util/getImageMetadata');
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg'];
 const RAW_DIR = './raw_photos';
 
-async function tagPhotos() {
+async function tagPhotosViaTagFolders() {
   // Use glob to get all image files recursively
   const files = await fg(`${RAW_DIR}/*/**/*`, {onlyFiles: true});
 
@@ -34,4 +34,4 @@ async function tagPhotos() {
   await exiftool.end();
 }
 
-tagPhotos();
+tagPhotosViaTagFolders();

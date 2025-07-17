@@ -1,4 +1,3 @@
-import SubPageLayout from '@/components/SubPageLayout';
 import HydrateClient from '@/components/query/HydrateClient';
 import getQueryClient from '@/components/query/util';
 import {queryAllLocations} from '@/lib/location';
@@ -24,8 +23,6 @@ export default async function LocationLayout(props: {children: ReactNode}) {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <HydrateClient state={dehydratedState}>
-      <SubPageLayout {...props} />
-    </HydrateClient>
+    <HydrateClient state={dehydratedState}>{props.children}</HydrateClient>
   );
 }

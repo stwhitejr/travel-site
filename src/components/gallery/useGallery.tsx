@@ -9,5 +9,10 @@ export default function useGallery(photos: PhotoMetadata[]) {
     selectedPhotoIndex !== null ? photos[selectedPhotoIndex] : null;
   const isLandscape = selectedPhoto?.width || 0 > (selectedPhoto?.height || 0);
 
-  return {selectedPhoto, isLandscape, setSelectedPhotoIndex};
+  return {
+    selectedPhoto,
+    isLandscape,
+    setSelectedPhotoIndex,
+    selectedPhotoIndex,
+  };
 }

@@ -1,9 +1,7 @@
 import {useMemo} from 'react';
 import useLocations from '../hooks/useLocations';
 import {SubHeaderLink} from '@/components/SubHeader';
-
-const truncateText = (text: string, cutOff = 15) =>
-  text.length > cutOff ? `${text.slice(0, cutOff)}...` : text;
+import {truncateText} from '@/util/helpers';
 
 export default function LocationRelativeNavigation({id}: {id: number}) {
   const {data: locations = []} = useLocations();

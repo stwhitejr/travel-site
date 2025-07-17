@@ -16,7 +16,6 @@ export const getPhotosByTag = async (tagId: number) => {
   `
     )
     .eq('tag_id', tagId);
-
   const data = (result.data || []).map(
     // @ts-expect-error not sure why supabase is getting the typing wrong
     (result) => result.photo as PhotoMetadata

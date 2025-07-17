@@ -131,14 +131,17 @@ export type Database = {
         Row: {
           id: number;
           name: string;
+          description: string;
         };
         Insert: {
           id?: number;
           name: string;
+          description: string;
         };
         Update: {
           id?: number;
           name?: string;
+          description?: string;
         };
         Relationships: [];
       };
@@ -157,6 +160,7 @@ export type Database = {
           rating: number | null;
           tag_id: number | null;
           tag_name: string | null;
+          tag_description: string | null;
           width: number | null;
         };
         Relationships: [

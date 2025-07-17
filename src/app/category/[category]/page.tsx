@@ -1,7 +1,7 @@
 import {getPhotosByTag} from '@/lib/photos';
 import {getAllTags} from '@/lib/tags';
 import SubHeader from '@/components/SubHeader';
-import CategoryRelativeNavigation from '../components/CateogoryRelativeNavigation';
+import CategoryRelativeNavigation from '../components/CategoryRelativeNavigation';
 import Category from '../components/Category';
 
 export default async function CategoryPage({
@@ -13,9 +13,9 @@ export default async function CategoryPage({
   const {data} = await getPhotosByTag(parseInt(category, 10));
   const tagsResponse = await getAllTags();
 
-  const getCategoryName = () => {
+  const getCategoryName = (): {name: string; description?: string} => {
     const match = (tagsResponse.data || []).find((tag) => tag.id == category);
-    return match?.name || category;
+    return match || {name: category};
   };
 
   return (

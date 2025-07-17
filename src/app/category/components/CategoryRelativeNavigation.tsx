@@ -5,11 +5,7 @@ import {SubHeaderLink} from '@/components/SubHeader';
 import {Tag} from '@/lib/tags';
 import {iconsByTagName} from '@/app/location/components/LocationIcons';
 import {ImageIcon} from 'lucide-react';
-
-const capitalCase = (text: string) => {
-  const [firstLetter, ...rest] = text;
-  return `${firstLetter.toUpperCase()}${rest.join('')}`;
-};
+import {truncateText} from '@/util/helpers';
 
 export default function CategoryRelativeNavigation({
   id,
@@ -38,12 +34,14 @@ export default function CategoryRelativeNavigation({
     <>
       {previous && (
         <SubHeaderLink dir="left" href={`/category/${previous.id}`}>
-          {capitalCase(previous.name)} <PreviousIcon className="inline w-4" />
+          {truncateText(previous.description || previous.name)}{' '}
+          <PreviousIcon className="inline w-4" />
         </SubHeaderLink>
       )}
       {next && (
         <SubHeaderLink dir="right" href={`/category/${next.id}`}>
-          {capitalCase(next.name)} <NextIcon className="inline w-4" />
+          {truncateText(next.description || next.name)}{' '}
+          <NextIcon className="inline w-4" />
         </SubHeaderLink>
       )}
     </>
