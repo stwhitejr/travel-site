@@ -28,6 +28,7 @@ export default function Category({
       ref={galleryParentRef}
     >
       <Gallery
+        filterPhotosWithNoRating
         // @ts-expect-error its a div
         galleryParentRef={galleryParentRef}
         photos={photos}

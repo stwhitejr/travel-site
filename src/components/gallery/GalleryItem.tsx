@@ -119,7 +119,7 @@ export default function GalleryItem({
                   ext: 'webp',
                 }
           )}
-          alt={photo.file_name}
+          alt={`${photo.file_name} - ${photo.id}`}
           fill
           className={`cursor-pointer rounded opacity-90 md:opacity-60 hover:opacity-100 ${
             isSelected

@@ -5,10 +5,13 @@ import {
   BirdIcon,
   CloudIcon,
   DogIcon,
+  HammerIcon,
+  HeartIcon,
   MapIcon,
   MountainIcon,
   SkullIcon,
   SnowflakeIcon,
+  SproutIcon,
   TruckIcon,
   WavesIcon,
 } from 'lucide-react';
@@ -26,6 +29,9 @@ export const iconsByTagName: Record<string, typeof BikeIcon> = {
   trail: MapIcon,
   wildlife: BirdIcon,
   vista: CloudIcon,
+  'early days': SproutIcon,
+  build: HammerIcon,
+  favorites: HeartIcon,
 };
 
 export default function LocationIcons(props: {photos: LocationPhotoEntry[]}) {

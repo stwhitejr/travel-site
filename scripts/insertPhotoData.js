@@ -20,9 +20,27 @@ const query = (async = async ({table, select = '*'}) => {
   return response;
 });
 
+const tagDescriptionByTagName = {
+  'early days': 'The Early Days',
+  build: 'The Build',
+  camp: 'Life in a Van',
+  king: 'My Ride or Die',
+  water: 'Beaches & Bodies of Water',
+  trail: 'Out on The Trail',
+  vista: 'The Views',
+  random: 'Everything In-Between',
+  wildlife: 'The Wildlife',
+  snow: 'The Snow',
+  desert: 'The Desert',
+  bike: 'Two Wheels',
+};
+
 const main = async (skipPhotoUpsert = false) => {
   const tags = require('../output/tags.json');
-  const formattedTags = tags.map((tag) => ({name: tag}));
+  const formattedTags = tags.map((tag) => ({
+    name: tag,
+    description: tagDescriptionByTagName[tag],
+  }));
   const photoMetadata = require('../output/photo_metadata_with_location_id.json');
 
   await upsert({table: 'tags', conflictKey: 'name', data: formattedTags});

@@ -1,9 +1,19 @@
 const sharp = require('sharp');
 const {exiftool} = require('exiftool-vendored');
-// const path = require('path');
+const path = require('path');
 
-const generateCoordinates = (gps) => {
-  return [gps.GPSLatitude, gps.GPSLongitude];
+const hardCoords = {
+  'glacierFloat.jpg': [48.6018067, -114.3283153],
+  'glacierWaterRock.jpg': [48.6018067, -114.3283153],
+  'glacierWaterRock3.jpg': [48.6018067, -114.3283153],
+  'glacierWaterRock3.jpg': [48.6018067, -114.3283153],
+};
+
+const generateCoordinates = (gps, fileName) => {
+  if (gps.GPSLatitude && gps.GPSLongitude) {
+    return [gps.GPSLatitude, gps.GPSLongitude];
+  }
+  return hardCoords[fileName] || [0, 0];
 };
 
 const mergeTags = (tags, tags2 = []) => {
@@ -23,7 +33,7 @@ const mergeTags = (tags, tags2 = []) => {
 
 const getImageMetadata = async (filePath) => {
   // const tagsByFileName = require('../../output/labels_by_filename');
-  // const fileName = path.basename(filePath);
+  const fileName = path.basename(filePath);
   // const tagsFromJsonFile = tagsByFileName[fileName] || [];
 
   const image = sharp(filePath);
@@ -34,7 +44,7 @@ const getImageMetadata = async (filePath) => {
   return {
     image,
     metadata: {
-      coordinates: generateCoordinates(imageMetadata),
+      coordinates: generateCoordinates(imageMetadata, fileName),
       camera: imageMetadata.Model,
       date: imageMetadata.DateTimeCreated,
       tags: mergeTags(

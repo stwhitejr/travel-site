@@ -31,16 +31,22 @@ export default function Gallery({
   onClick,
   AutoPlayButton,
   galleryParentRef,
+  filterPhotosWithNoRating,
 }: {
   photos: PhotoMetadata[];
   onClick?: (arg: number | null) => void;
   AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
   galleryParentRef?: RefObject<HTMLDivElement>;
+  filterPhotosWithNoRating?: boolean;
 }) {
   const [autoPlay, setAutoPlay] = useState(false);
   const sortedPhotos = useMemo(() => {
-    return [...photos].sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }, [photos]);
+    return (
+      filterPhotosWithNoRating
+        ? photos.filter((photo) => !!photo.rating)
+        : [...photos]
+    ).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  }, [photos, filterPhotosWithNoRating]);
   const {selectedPhoto, setSelectedPhotoIndex, selectedPhotoIndex} =
     useGallery(sortedPhotos);
 
@@ -78,7 +84,7 @@ export default function Gallery({
           count: sortedPhotos.length,
           dir: 'right',
         });
-      }, 4000);
+      }, 3000);
 
       const listener = (e: KeyboardEvent) => {
         if (e.key === 'Escape' || e.key === 'Dead') {
