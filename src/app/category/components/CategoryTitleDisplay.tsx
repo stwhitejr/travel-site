@@ -1,5 +1,6 @@
 import {iconsByTagName} from '@/app/location/components/LocationIcons';
 import {anton} from '@/util/fonts';
+import useIsMobile from '@/util/useIsMobile';
 import {PlayCircleIcon} from 'lucide-react';
 
 export default function CategoryTitleDisplay({
@@ -11,11 +12,12 @@ export default function CategoryTitleDisplay({
   onClick: () => void;
   isAutoPlaying: boolean;
 }) {
+  const isMobile = useIsMobile();
   const Icon = iconsByTagName[categoryName.name];
   return (
     <div
-      onClick={onClick}
-      className={`cursor-pointer w-full h-full bg-[#354754] rounded flex items-center justify-center gap-1 text-center text-3xl px-2 overflow-hidden ${anton.className} text-amber-50 opacity-90 relative group`}
+      {...(isMobile ? {} : {onClick})}
+      className={`cursor-pointer w-full h-ful min-h-[100px] bg-[#354754] rounded flex items-center justify-center gap-1 text-center text-2xl md:text-3xl px-2 overflow-hidden ${anton.className} text-amber-50 opacity-90 relative group`}
     >
       {isAutoPlaying ? (
         <>

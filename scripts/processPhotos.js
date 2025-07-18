@@ -2,6 +2,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const {exiftool} = require('exiftool-vendored');
 const getImageMetadata = require('./util/getImageMetadata');
+const processFiles = require('./util/processFiles');
+const {validatePathAsImage} = require('./util/helpers');
 
 const RAW_DIR = './raw_photos';
 const OUT_DIR = './output';
@@ -16,22 +18,18 @@ const JPEG_QUALITY = 85;
 async function processPhotos() {
   await fs.ensureDir(PHOTO_OUTPUT_DIR);
   await fs.ensureDir(THUMBNAIL_OUTPUT_DIR);
-  const files = await fs.readdir(RAW_DIR);
   const metadataList = [];
 
-  for (const file of files) {
-    const ext = path.extname(file).toLowerCase();
-    if (!['.jpg', '.jpeg', '.png'].includes(ext)) continue;
+  await processFiles(RAW_DIR, async (file, {filePath, fileName}) => {
+    if (!validatePathAsImage(file)) return 'continue';
 
-    const filePath = path.join(RAW_DIR, file);
     const outputPath = path.join(PHOTO_OUTPUT_DIR, file);
-    const fileName = path.basename(file, ext);
 
     try {
       const {image, metadata} = await getImageMetadata(filePath);
 
       if (!metadata.coordinates[0]) {
-        continue;
+        return 'continue';
       }
 
       if (metadata.orientation === 'portrait') {
@@ -76,7 +74,7 @@ async function processPhotos() {
     } catch (err) {
       console.error(`Failed to process ${file}:`, err);
     }
-  }
+  });
 
   // Write metadata JSON
   await fs.writeJson(META_FILE, metadataList, {spaces: 2});

@@ -2,8 +2,8 @@ const path = require('path');
 const {exiftool} = require('exiftool-vendored');
 const fg = require('fast-glob');
 const getImageMetadata = require('./util/getImageMetadata');
+const {validatePathAsImage} = require('./util/helpers');
 
-const IMAGE_EXTENSIONS = ['.jpg', '.jpeg'];
 const RAW_DIR = './raw_photos';
 
 async function tagPhotosViaTagFolders() {
@@ -11,8 +11,7 @@ async function tagPhotosViaTagFolders() {
   const files = await fg(`${RAW_DIR}/*/**/*`, {onlyFiles: true});
 
   for (const file of files) {
-    const ext = path.extname(file).toLowerCase();
-    if (!IMAGE_EXTENSIONS.includes(ext)) continue;
+    if (!validatePathAsImage(file)) continue;
 
     const folderName = path.basename(path.dirname(file));
 

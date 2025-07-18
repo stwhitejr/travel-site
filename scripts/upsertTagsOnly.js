@@ -1,8 +1,9 @@
 const fs = require('fs-extra');
-const path = require('path');
 const {exiftool} = require('exiftool-vendored');
 const getImageMetadata = require('./util/getImageMetadata');
 const insertPhotoData = require('./insertPhotoData');
+const processFiles = require('./util/processFiles');
+const {validatePathAsImage} = require('./util/helpers');
 
 const RAW_DIR = './raw_photos';
 const OUT_DIR = './output';
@@ -10,16 +11,11 @@ const META_FILE = OUT_DIR + '/photo_metadata_with_location_id.json';
 const TAGS_FILE = OUT_DIR + '/tags.json';
 
 async function upsertTagsOnly() {
-  const files = await fs.readdir(RAW_DIR);
   const metadataList = [];
   const tags = new Set();
 
-  for (const file of files) {
-    const ext = path.extname(file).toLowerCase();
-    if (!['.jpg', '.jpeg', '.png'].includes(ext)) continue;
-
-    const fileName = path.basename(file, ext);
-    const filePath = path.join(RAW_DIR, file);
+  await processFiles(RAW_DIR, async (file, {fileName, filePath}) => {
+    if (!validatePathAsImage(file)) return 'continue';
 
     try {
       const {metadata} = await getImageMetadata(filePath);
@@ -38,7 +34,7 @@ async function upsertTagsOnly() {
     } catch (err) {
       console.error(`Failed to process ${file}:`, err);
     }
-  }
+  });
 
   // Write metadata JSON
   await fs.writeJson(META_FILE, metadataList, {spaces: 2});

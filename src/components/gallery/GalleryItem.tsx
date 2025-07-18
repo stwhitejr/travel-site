@@ -69,14 +69,8 @@ export default function GalleryItem({
 
   useEffect(() => {
     if (isSelected) {
-      previousScrollData.current = {
-        elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
-        to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
-      };
-
       ref.current?.scrollIntoView({behavior: 'smooth'});
     } else if (previousScrollData.current.to !== null) {
-      console.log('previousScrollData', previousScrollData);
       (previousScrollData.current.elementType === 'window'
         ? window
         : galleryParentRef?.current
@@ -89,6 +83,18 @@ export default function GalleryItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSelected]);
 
+  const handleClick = () => {
+    if (isSelected) {
+      onClick(null);
+    } else {
+      previousScrollData.current = {
+        elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
+        to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
+      };
+      onClick(index);
+    }
+  };
+
   return (
     <motion.div
       ref={setRefs}
@@ -99,8 +105,7 @@ export default function GalleryItem({
           : !selectedPhotoExists
           ? getGridItemClass(index)
           : ''
-      } relative `}
-      style={{minHeight: '120px'}}
+      } relative min-h-[120px]`}
     >
       {inView && (
         <Image
@@ -121,7 +126,7 @@ export default function GalleryItem({
               ? 'GalleryItem-selectedPhoto opacity-100 md:opacity-100 object-contain'
               : `object-cover ${getClassNamesByFileName(photo.file_name)}`
           }`}
-          onClick={() => onClick(isSelected ? null : index)}
+          onClick={handleClick}
           {...(photo.blur
             ? {placeholder: 'blur', blurDataURL: photo.blur}
             : {})}

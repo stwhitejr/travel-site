@@ -2,8 +2,29 @@
 
 import {PhotoMetadata} from '@/lib/photos';
 import useGallery from './useGallery';
-import {FC, RefObject, useEffect, useMemo, useState} from 'react';
+import {FC, RefObject, useCallback, useEffect, useMemo, useState} from 'react';
 import GalleryItem from './GalleryItem';
+import {useSwipe} from '@/util/useSwipe';
+
+const incrementIndex = ({
+  index,
+  count,
+  dir,
+}: {
+  index: number;
+  count: number;
+  dir: 'left' | 'right';
+}) => {
+  if (dir === 'right') {
+    if (index === count - 1) {
+      return 0;
+    }
+    return index + 1;
+  } else if (index === 0) {
+    return count - 1;
+  }
+  return index - 1;
+};
 
 export default function Gallery({
   photos,
@@ -24,9 +45,27 @@ export default function Gallery({
     useGallery(sortedPhotos);
 
   const handleClick = (index: number | null) => {
+    setAutoPlay(false);
     setSelectedPhotoIndex(index);
     onClick?.(index);
   };
+
+  const handleSwipe = useCallback(
+    (dir: 'left' | 'right') => {
+      if (selectedPhotoIndex !== null) {
+        setSelectedPhotoIndex(
+          incrementIndex({
+            index: selectedPhotoIndex,
+            count: sortedPhotos.length,
+            dir,
+          })
+        );
+      }
+    },
+    [setSelectedPhotoIndex, selectedPhotoIndex, sortedPhotos]
+  );
+
+  useSwipe(handleSwipe);
 
   useEffect(() => {
     if (autoPlay) {
@@ -34,11 +73,11 @@ export default function Gallery({
       setSelectedPhotoIndex(0);
       const interval = setInterval(() => {
         setSelectedPhotoIndex(index);
-        if (selectedPhotoIndex === sortedPhotos.length - 1) {
-          index = 0;
-        } else {
-          index++;
-        }
+        index = incrementIndex({
+          index,
+          count: sortedPhotos.length,
+          dir: 'right',
+        });
       }, 4000);
 
       const listener = (e: KeyboardEvent) => {
@@ -63,13 +102,22 @@ export default function Gallery({
       if (selectedPhotoIndex === null || autoPlay) {
         return;
       }
-      if (
-        e.key === 'ArrowRight' &&
-        selectedPhotoIndex !== sortedPhotos.length - 1
-      ) {
-        setSelectedPhotoIndex(selectedPhotoIndex + 1);
-      } else if (e.key === 'ArrowLeft' && selectedPhotoIndex !== 0) {
-        setSelectedPhotoIndex(selectedPhotoIndex - 1);
+      if (e.key === 'ArrowRight') {
+        setSelectedPhotoIndex(
+          incrementIndex({
+            index: selectedPhotoIndex,
+            count: sortedPhotos.length,
+            dir: 'right',
+          })
+        );
+      } else if (e.key === 'ArrowLeft') {
+        setSelectedPhotoIndex(
+          incrementIndex({
+            index: selectedPhotoIndex,
+            count: sortedPhotos.length,
+            dir: 'left',
+          })
+        );
       }
     };
 
@@ -114,6 +162,18 @@ export default function Gallery({
           </>
         );
       })}
+      {/* Creat extra grid items so the photos at the bottom of somethign to span */}
+      {selectedPhoto && (
+        <>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+          <div className="h-full min-h-[120px]">&nbsp;</div>
+        </>
+      )}
     </div>
   );
 }
