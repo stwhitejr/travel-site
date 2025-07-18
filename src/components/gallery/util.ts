@@ -1,17 +1,19 @@
 export const SUPABASE_PROJECT_DOMAIN =
   'https://pajqyzcpmfrhpupdtupn.supabase.co';
 export const SUPABASE_PHOTOS_URL = `${SUPABASE_PROJECT_DOMAIN}/storage/v1/object/public/photos`;
+export const SUPABASE_VIDEOS_URL = `${SUPABASE_PROJECT_DOMAIN}/storage/v1/object/public/video`;
 
 export const getResourceUrl = (
   id: string,
   options = {
     ext: 'jpg',
     isThumbnail: false,
-  } as {ext?: string; isThumbnail?: boolean}
+    isVideo: false,
+  } as {ext?: string; isThumbnail?: boolean; isVideo?: boolean}
 ) =>
-  `${SUPABASE_PHOTOS_URL}/${options.isThumbnail ? 'thumbnails/' : ''}${id}.${
-    options.ext
-  }`;
+  `${options.isVideo ? SUPABASE_VIDEOS_URL : SUPABASE_PHOTOS_URL}/${
+    options.isThumbnail ? 'thumbnails/' : ''
+  }${id}.${options.ext}`;
 
 const classNamesByFileName: Record<string, string> = {
   IMG_4240: 'object-bottom',

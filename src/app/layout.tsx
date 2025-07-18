@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Steve's wicked cool site",
-  description: 'created by steve',
+  title: 'Freewheelin’ - The Journey',
+  description: 'A Man, A Dog, A Van',
 };
 
 export default function RootLayout({
