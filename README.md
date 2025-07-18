@@ -1,6 +1,11 @@
 This is a photo gallery based website built entirely off my iPhone photos. Using various scripts I can ingest the photos metadata and derive a list of locations, tags and photo metadata that can be uploaded to my Supabase tables. This data drives the entire website with almost no "baked in" content. This application will offer 2 main user experiences.
 
+<img width="1916" height="760" alt="Screenshot 2025-07-18 at 11 11 37 AM" src="https://github.com/user-attachments/assets/0007a3f6-c005-439e-a009-b89f5de52484" />
+
 ## Categories
+
+<img width="1911" height="882" alt="Screenshot 2025-07-18 at 11 11 55 AM" src="https://github.com/user-attachments/assets/c131d2b3-7f2c-4e02-9953-f73efd248b7a" />
+
 
 The category pages are 100% derived from the keywords/tags found on the photos at time of ingestion. It'll take the highest rated photo and use that as a "tile" photo on the category list page. Once on the category page we use a photo tags join table to get the list of photo metadata.
 
@@ -13,6 +18,9 @@ Once on a location entity page we get all photos that have the correct associate
 ## User Experiences
 
 ### Gallery
+
+<img width="1682" height="757" alt="Screenshot 2025-07-18 at 11 19 34 AM" src="https://github.com/user-attachments/assets/29fb8159-e9ca-49e1-9bc1-3f2be7e38f72" />
+
 
 Using mostly just CSS including grid, filter, and animations I'm able to create a unique (in my opinion) hand built photo gallery. Thanks to TailwindCSS I can easily adjust the grid and styles for mobile. It supports intuitive left/right key clicks or swipes and an autoplay feature on desktop.
 
