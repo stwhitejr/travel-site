@@ -25,13 +25,6 @@ export default function Home() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover hidden sm:block"
       >
-        {/* <source
-          src={getResourceUrl('landscape_web', {
-            ext: 'webm',
-            isVideo: true,
-          })}
-          type="video/webm"
-        /> */}
         <source
           src={getResourceUrl('landscape_web_compr', {
             ext: 'mp4',
@@ -47,10 +40,10 @@ export default function Home() {
         playsInline
         className="absolute top-0 left-0 w-full h-full object-cover block sm:hidden"
       >
-        {/* <source
+        <source
           src={getResourceUrl('portrait_web', {ext: 'webm', isVideo: true})}
           type="video/webm"
-        /> */}
+        />
         <source
           src={getResourceUrl('portrait_web_compr', {
             ext: 'mp4',
