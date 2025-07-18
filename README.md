@@ -11,9 +11,12 @@ The category pages are 100% derived from the keywords/tags found on the photos a
 
 ## Locations
 
+<img width="1909" height="837" alt="Screenshot 2025-07-18 at 11 28 20 AM" src="https://github.com/user-attachments/assets/25491227-c180-4cd7-8017-cd7e03c1637e" />
+
+
 The location page uses a list of locations 100% derived from iPhone photo coordinates. In one of the ingestion scripts we implode on locations that are somewhat close together so we don't have locations that are basically right next to each other on the map. The frontend uses Mapbox to create a globe with markers that link to location entity pages.
 
-Once on a location entity page we get all photos that have the correct associated location ID. The coordinates are turned into a human readable address and title during ingestion so no need to look these up on the frontend.
+Once on a location entity page we get all photos that have the correct associated location ID. The coordinates are turned into a human readable address and title during ingestion so no need to look these up on the frontend. Part of the fun of this project was seeing some of the weird address/titles the coordinates would convert to. Some of them are incredibly accurate like adding site numbers for camp sites or trail names.
 
 ## User Experiences
 
