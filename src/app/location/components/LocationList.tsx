@@ -6,6 +6,8 @@ import Link from 'next/link';
 import {useMemo} from 'react';
 import useLocations from '../hooks/useLocations';
 
+const EARLY_DAYS_TAG_ID = 88;
+
 const MarkerWithLink = (props: MarkerComponentProps) => {
   return (
     <Link href={`/location/?id=${props.id}`} onClick={props.onClick}>
@@ -14,17 +16,36 @@ const MarkerWithLink = (props: MarkerComponentProps) => {
   );
 };
 
-export default function LocationList({id}: {id?: string | number}) {
+export type Trip = 1 | 2 | null;
+
+export default function LocationList({
+  id,
+  trip,
+}: {
+  id?: string | number;
+  trip?: Trip;
+}) {
   const {data: locations = []} = useLocations();
 
   const markers = useMemo(() => {
     return locations.reduce((acc, location) => {
       if (location.coordinates) {
-        acc = acc.concat(location);
+        if (!trip) {
+          // @ts-expect-error coordinates is checked above
+          acc = acc.concat(location);
+        } else {
+          const isTrip1 = location.tags.some(
+            (tag) => tag.id === EARLY_DAYS_TAG_ID
+          );
+          if ((trip === 1 && isTrip1) || (trip === 2 && !isTrip1)) {
+            // @ts-expect-error coordinates is checked above
+            acc = acc.concat(location);
+          }
+        }
       }
       return acc;
     }, [] as LocationMarker[]);
-  }, [locations]);
+  }, [locations, trip]);
 
   return (
     <Globe

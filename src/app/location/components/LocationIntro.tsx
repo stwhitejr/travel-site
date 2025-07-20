@@ -78,7 +78,7 @@ export default function LocationIntro({
       ) : (
         <>
           <div className="flex-2 md:flex-1 min-h-20">{list}</div>
-          <div className="flex-1 md:h-full flex gap-5 md:gap-2 flex-row md:flex-col justify-between p-4">
+          <div className="flex-1 md:h-full flex gap-5 md:gap-2 flex-row md:flex-col justify-between p-4 md:pr-20">
             <div className="md:max-w-[400px]">
               <h1 className={`${anton.className} md:text-2xl`}>
                 <LocationTitle

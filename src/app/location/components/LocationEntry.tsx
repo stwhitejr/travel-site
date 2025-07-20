@@ -27,7 +27,7 @@ export default function LocationEntry({
       </SubHeader>
 
       <div className="md:h-full  md:overflow-y-hidden">
-        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[30%]'}`}>
+        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[40%]'}`}>
           <LocationIntro
             condensed={!!isCondensed}
             location={props}
@@ -38,7 +38,7 @@ export default function LocationEntry({
 
         <div
           className={`flex p-[10px] md:overflow-y-hidden ${
-            isCondensed ? 'h-[85%]' : 'md:h-[70%]'
+            isCondensed ? 'h-[85%]' : 'md:h-[60%]'
           }`}
         >
           <div

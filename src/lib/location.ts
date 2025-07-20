@@ -3,6 +3,9 @@ import {Database} from './database.types';
 import {PhotoMetadataWithTags} from './photos';
 
 export type Location = Database['public']['Tables']['location']['Row'];
+export type LocationWithTags = Location & {
+  tags: Array<{id: number; name: string}>;
+};
 
 export interface QueryLocationsByIdOptions {
   id: number;
@@ -47,7 +50,4 @@ export const queryLocationsById = async (
 };
 
 export const queryAllLocations = async (supabase: SupabaseClient) =>
-  await supabase
-    .from('location')
-    .select('*')
-    .order('sort_index', {ascending: true});
+  await supabase.from('location_with_tags').select('*');

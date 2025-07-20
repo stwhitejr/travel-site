@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, {Marker, ViewState, MapRef} from 'react-map-gl/mapbox';
-import {Location} from '@/lib/location';
+import {LocationWithTags} from '@/lib/location';
 import VisualMarker from './Marker';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -12,7 +12,7 @@ export interface MarkerComponentProps {
   selectedMarker?: string | number | null;
 }
 
-export type LocationMarker = Omit<Location, 'coordinates'> & {
+export type LocationMarker = Omit<LocationWithTags, 'coordinates'> & {
   coordinates: [number, number];
 };
 
@@ -20,6 +20,7 @@ type GlobeProps = {
   markers: Array<LocationMarker>;
   MarkerComponent?: FC<MarkerComponentProps>;
   selectedMarker?: string | number | null;
+  useLocalStorage?: boolean;
 };
 
 const LOCAL_STORAGE_KEY = 'map-view-state';
@@ -45,6 +46,7 @@ export default function Globe({
   markers,
   MarkerComponent = VisualMarker,
   selectedMarker,
+  useLocalStorage = false,
 }: GlobeProps) {
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
   const mapRef = useRef<MapRef>(null);
@@ -60,14 +62,14 @@ export default function Globe({
         return result;
       }
     }
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && useLocalStorage) {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     }
     return {
-      latitude: 38.7946,
-      longitude: -106.5348,
-      zoom: 2,
+      latitude: 40,
+      longitude: -95,
+      zoom: typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : 4,
       bearing: 0,
       pitch: 0,
     };
