@@ -41,6 +41,21 @@ The `scripts/` folder is where all the ingestion happens. There's a README in th
 
 For tagging, there's a couple scripts in there that helped me auto tag my photos. 1 script is more manual where I move photos into a folder and the script will use that folder name as a tag and write it to the photo metadata. Another one uses an AI model to generate a JSON file of pre-defined labels and checks them for a match.
 
+## Admin UI
+
+I was originally never going to put in any kind of admin UI as I didn't plan on changing the data but I found myself adjusting ratings, tags and wanting to further consolidate locations. I got sick of doing in the DB so I figured why not do a quick dirty admin mode that only works when running in development. Normally I would have designed this much better but it gets the job done. I created a couple of DB functions that really help a lot such as being able to delete a location and reassign location IDs for the existing photos and re-indexing a location while shifting all the others to accomodate so I can easily control the sort.
+
+<img width="857" height="582" alt="Screenshot 2025-07-20 at 12 54 05 PM" src="https://github.com/user-attachments/assets/72500205-4bb4-4f8d-b712-54a020105f8b" />
+
+<img width="857" height="402" alt="Screenshot 2025-07-20 at 12 54 20 PM" src="https://github.com/user-attachments/assets/068084eb-3442-48f2-b9c5-3685f4594e26" />
+
+<img width="1042" height="441" alt="Screenshot 2025-07-20 at 12 54 35 PM" src="https://github.com/user-attachments/assets/d189691e-173f-4354-a11e-f4323e6b5599" />
+
+
+
+
+
+
 # Developing
 
 ```bash
