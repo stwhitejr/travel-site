@@ -1,6 +1,6 @@
 'use client';
 
-import {PhotoMetadata} from '@/lib/photos';
+import {PhotoMetadataWithTags} from '@/lib/photos';
 import Image from 'next/image';
 import {getClassNamesByFileName, getResourceUrl} from './util';
 import {motion} from 'framer-motion';
@@ -41,7 +41,7 @@ export default function GalleryItem({
   isSelected: boolean;
   selectedPhotoExists: boolean;
   index: number;
-  photo: PhotoMetadata;
+  photo: PhotoMetadataWithTags;
   onClick: (index: number | null) => void;
   galleryParentRef?: RefObject<HTMLDivElement>;
 }) {

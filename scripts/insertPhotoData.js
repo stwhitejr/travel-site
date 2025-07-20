@@ -25,7 +25,7 @@ const tagDescriptionByTagName = {
   build: 'The Build',
   camp: 'Life in a Van',
   king: 'My Ride or Die',
-  water: 'Beaches & Bodies of Water',
+  water: 'Bodies of Water',
   trail: 'Out on The Trail',
   vista: 'The Views',
   random: 'Everything In-Between',
@@ -33,6 +33,7 @@ const tagDescriptionByTagName = {
   snow: 'The Snow',
   desert: 'The Desert',
   bike: 'Two Wheels',
+  favorites: 'My Favorites',
 };
 
 const main = async (skipPhotoUpsert = false) => {

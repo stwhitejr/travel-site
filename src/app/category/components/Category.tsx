@@ -1,16 +1,19 @@
 'use client';
 
 import Gallery from '@/components/gallery/Gallery';
-import {PhotoMetadata} from '@/lib/photos';
+import {PhotoMetadataWithTags} from '@/lib/photos';
 import {useMemo, useRef} from 'react';
 import CategoryTitleDisplay from './CategoryTitleDisplay';
+import {Tag} from '@/lib/tags';
 
 export default function Category({
   photos,
   categoryName,
+  tags,
 }: {
   categoryName: {name: string; description?: string};
-  photos: PhotoMetadata[];
+  photos: PhotoMetadataWithTags[];
+  tags?: Tag[];
 }) {
   const galleryParentRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +36,7 @@ export default function Category({
         galleryParentRef={galleryParentRef}
         photos={photos}
         AutoPlayButton={AutoPlayButton}
+        tags={tags}
       />
     </div>
   );

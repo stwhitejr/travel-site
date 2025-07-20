@@ -4,7 +4,10 @@ import {Database} from '../../lib/database.types';
 import {ReadonlyRequestCookies} from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseKey =
+  process.env.NODE_ENV === 'development'
+    ? process.env.SUPABASE_ROLE_KEY
+    : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const createClient = (cookieStore: ReadonlyRequestCookies) => {
   return createServerClient<Database>(supabaseUrl!, supabaseKey!, {

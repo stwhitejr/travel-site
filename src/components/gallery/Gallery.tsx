@@ -1,10 +1,20 @@
 'use client';
 
-import {PhotoMetadata} from '@/lib/photos';
+import {PhotoMetadataWithTags} from '@/lib/photos';
 import useGallery from './useGallery';
-import {FC, RefObject, useCallback, useEffect, useMemo, useState} from 'react';
+import {
+  FC,
+  Fragment,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import GalleryItem from './GalleryItem';
 import {useSwipe} from '@/util/useSwipe';
+import {Tag} from '@/lib/tags';
+import PhotoSettings from './PhotoSettings';
 
 const incrementIndex = ({
   index,
@@ -32,12 +42,14 @@ export default function Gallery({
   AutoPlayButton,
   galleryParentRef,
   filterPhotosWithNoRating,
+  tags,
 }: {
-  photos: PhotoMetadata[];
+  photos: PhotoMetadataWithTags[];
   onClick?: (arg: number | null) => void;
   AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
   galleryParentRef?: RefObject<HTMLDivElement>;
   filterPhotosWithNoRating?: boolean;
+  tags?: Tag[];
 }) {
   const [autoPlay, setAutoPlay] = useState(false);
   const sortedPhotos = useMemo(() => {
@@ -155,9 +167,8 @@ export default function Gallery({
         const isSelected =
           selectedPhoto?.id === photo.id && index < photos.length;
         return (
-          <>
+          <Fragment key={photo.id}>
             <GalleryItem
-              key={photo.id}
               photo={photo}
               index={index}
               isSelected={isSelected}
@@ -165,7 +176,10 @@ export default function Gallery({
               onClick={handleClick}
               galleryParentRef={galleryParentRef}
             />
-          </>
+            {isSelected && process.env.NODE_ENV === 'development' && (
+              <PhotoSettings allTags={tags} {...photo} />
+            )}
+          </Fragment>
         );
       })}
       {/* Creat extra grid items so the photos at the bottom of somethign to span */}

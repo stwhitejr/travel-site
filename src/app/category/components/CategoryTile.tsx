@@ -27,7 +27,7 @@ export default function CategoryTile(props: HeroTag) {
         priority
         {...(props.blur ? {blurDataURL: props.blur, placeholder: 'blur'} : {})}
       />
-      <div className="absolute inset-0 flex items-center justify-center text-white text-4xl opacity-100 md:opacity-80 group-hover:opacity-100 text-shadow-lg/30 md:text-shadow-lg/10 group-hover:text-shadow-lg/30">
+      <div className="absolute inset-0 flex items-center justify-center text-white text-4xl opacity-100 md:opacity-80 group-hover:opacity-100 text-shadow-lg/30 md:text-shadow-lg/10 group-hover:text-shadow-lg/30 text-center p-5">
         {props.tag_description || props.tag_name}
       </div>
     </div>

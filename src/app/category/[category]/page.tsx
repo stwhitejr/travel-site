@@ -28,7 +28,11 @@ export default async function CategoryPage({
           />
         </SubHeader>
       </div>
-      <Category photos={data || []} categoryName={getCategoryName()} />
+      <Category
+        photos={data || []}
+        categoryName={getCategoryName()}
+        tags={tagsResponse.data || []}
+      />
     </div>
   );
 }

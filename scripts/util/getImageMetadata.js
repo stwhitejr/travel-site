@@ -7,6 +7,10 @@ const hardCoords = {
   'glacierWaterRock.jpg': [48.6018067, -114.3283153],
   'glacierWaterRock3.jpg': [48.6018067, -114.3283153],
   'glacierWaterRock3.jpg': [48.6018067, -114.3283153],
+  'lovell_canyon_sunset_1.jpg': [36.0430406, -115.6278103],
+  'lovell_canyon_sunset_2.jpg': [36.0430406, -115.6278103],
+  'montanacamp.jpg': [47.3080274, -114.8381135],
+  'montanacampwithtrain.jpg': [47.3080274, -114.8381135],
 };
 
 const generateCoordinates = (gps, fileName) => {

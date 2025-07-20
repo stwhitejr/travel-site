@@ -1,4 +1,4 @@
-import {LocationPhotoEntry} from '@/lib/location';
+import {PhotoMetadataWithTags} from '@/lib/photos';
 import {
   BadgeQuestionMark,
   BikeIcon,
@@ -34,16 +34,18 @@ export const iconsByTagName: Record<string, typeof BikeIcon> = {
   favorites: HeartIcon,
 };
 
-export default function LocationIcons(props: {photos: LocationPhotoEntry[]}) {
+export default function LocationIcons(props: {
+  photos: PhotoMetadataWithTags[];
+}) {
   const icons = useMemo(() => {
     const tags = props.photos
       .map((photo) => photo.tags)
       .flat()
       .reduce((acc, entry) => {
-        if (!entry?.tag.name) {
+        if (!entry?.name) {
           return acc;
         }
-        acc.add(entry.tag.name);
+        acc.add(entry.name);
         return acc;
       }, new Set<string>());
 
@@ -51,7 +53,7 @@ export default function LocationIcons(props: {photos: LocationPhotoEntry[]}) {
       if (tagName in iconsByTagName) {
         const Icon = iconsByTagName[tagName];
         if (Icon) {
-          acc.push(<Icon name={tagName} />);
+          acc.push(<Icon key={tagName} name={tagName} />);
         }
       }
 

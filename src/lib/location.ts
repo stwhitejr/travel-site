@@ -1,24 +1,20 @@
 import {SupabaseClient} from '@/util/supabase/client';
 import {Database} from './database.types';
-import {PhotoMetadata} from './photos';
-import {Tag} from './tags';
+import {PhotoMetadataWithTags} from './photos';
 
 export type Location = Database['public']['Tables']['location']['Row'];
 
 export interface QueryLocationsByIdOptions {
   id: number;
 }
-export type LocationPhotoEntry = PhotoMetadata & {
-  tags: Array<{tag: Tag}>;
-};
 export type LocationByIdResult = Location & {
-  photos: Array<LocationPhotoEntry>;
+  photos: Array<PhotoMetadataWithTags>;
 };
 export const queryLocationsById = async (
   supabase: SupabaseClient,
   {id}: QueryLocationsByIdOptions
-) =>
-  await supabase
+) => {
+  const result = await supabase
     .from('location')
     .select(
       `
@@ -36,5 +32,22 @@ export const queryLocationsById = async (
     .eq('id', id)
     .single();
 
+  return {
+    ...result,
+    data: {
+      ...result.data,
+      // @ts-expect-error supabase
+      photos: (result.data?.photos || []).map((photo) => ({
+        ...photo,
+        // @ts-expect-error supabase
+        tags: photo.tags.map(({tag}) => tag),
+      })),
+    },
+  };
+};
+
 export const queryAllLocations = async (supabase: SupabaseClient) =>
-  await supabase.from('location').select('*');
+  await supabase
+    .from('location')
+    .select('*')
+    .order('sort_index', {ascending: true});

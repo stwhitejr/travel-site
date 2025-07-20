@@ -17,6 +17,7 @@ export type Database = {
       location: {
         Row: {
           address: string | null;
+          sort_index: number | null;
           coordinates: [number, number] | null;
           description: string | null;
           id: number;
@@ -24,6 +25,7 @@ export type Database = {
         };
         Insert: {
           address?: string | null;
+          sort_index?: number | null;
           coordinates?: [number, number] | null;
           description?: string | null;
           id?: number;
@@ -31,6 +33,7 @@ export type Database = {
         };
         Update: {
           address?: string | null;
+          sort_index?: number | null;
           coordinates?: [number, number] | null;
           description?: string | null;
           id?: number;
