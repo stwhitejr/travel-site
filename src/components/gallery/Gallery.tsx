@@ -2,19 +2,13 @@
 
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import useGallery from './useGallery';
-import {
-  FC,
-  Fragment,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import {FC, Fragment, RefObject, useEffect, useMemo, useState} from 'react';
 import GalleryItem from './GalleryItem';
-import {useSwipe} from '@/util/useSwipe';
 import {Tag} from '@/lib/tags';
 import PhotoSettings from './PhotoSettings';
+import MobileGallery from './MobileGallery';
+import useIsMobile from '@/util/useIsMobile';
+import {XIcon} from 'lucide-react';
 
 const incrementIndex = ({
   index,
@@ -36,6 +30,15 @@ const incrementIndex = ({
   return index - 1;
 };
 
+interface GalleryProps {
+  photos: PhotoMetadataWithTags[];
+  onClick?: (arg: number | null) => void;
+  AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
+  galleryParentRef?: RefObject<HTMLDivElement>;
+  filterPhotosWithNoRating?: boolean;
+  tags?: Tag[];
+}
+
 export default function Gallery({
   photos,
   onClick,
@@ -43,14 +46,8 @@ export default function Gallery({
   galleryParentRef,
   filterPhotosWithNoRating,
   tags,
-}: {
-  photos: PhotoMetadataWithTags[];
-  onClick?: (arg: number | null) => void;
-  AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
-  galleryParentRef?: RefObject<HTMLDivElement>;
-  filterPhotosWithNoRating?: boolean;
-  tags?: Tag[];
-}) {
+}: GalleryProps) {
+  const isMobile = useIsMobile();
   const [autoPlay, setAutoPlay] = useState(false);
   const sortedPhotos = useMemo(() => {
     return (
@@ -67,23 +64,6 @@ export default function Gallery({
     setSelectedPhotoIndex(index);
     onClick?.(index);
   };
-
-  const handleSwipe = useCallback(
-    (dir: 'left' | 'right') => {
-      if (selectedPhotoIndex !== null) {
-        setSelectedPhotoIndex(
-          incrementIndex({
-            index: selectedPhotoIndex,
-            count: sortedPhotos.length,
-            dir,
-          })
-        );
-      }
-    },
-    [setSelectedPhotoIndex, selectedPhotoIndex, sortedPhotos]
-  );
-
-  useSwipe(handleSwipe);
 
   useEffect(() => {
     if (autoPlay) {
@@ -149,6 +129,26 @@ export default function Gallery({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPhoto]);
 
+  const closeButton = (
+    <div
+      onClick={() => setSelectedPhotoIndex(null)}
+      className={`absolute p-4 z-10 rounded-full top-2 right-2 drop-shadow-md bg-slate-800  text-white cursor-pointer`}
+    >
+      <XIcon size={20} />
+    </div>
+  );
+
+  if (isMobile && selectedPhotoIndex !== null) {
+    return (
+      <MobileGallery
+        onClick={handleClick}
+        closeButton={closeButton}
+        selectedPhotoIndex={selectedPhotoIndex}
+        photos={sortedPhotos}
+      />
+    );
+  }
+
   return (
     <div className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}>
       {AutoPlayButton && (
@@ -175,10 +175,12 @@ export default function Gallery({
               selectedPhotoExists={!!selectedPhoto}
               onClick={handleClick}
               galleryParentRef={galleryParentRef}
-            />
-            {isSelected && process.env.NODE_ENV === 'development' && (
-              <PhotoSettings allTags={tags} {...photo} />
-            )}
+              closeButton={closeButton}
+            >
+              {isSelected && process.env.NODE_ENV === 'development' && (
+                <PhotoSettings allTags={tags} {...photo} />
+              )}
+            </GalleryItem>
           </Fragment>
         );
       })}

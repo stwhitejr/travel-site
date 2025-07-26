@@ -6,6 +6,7 @@ import LocationList, {Trip} from './LocationList';
 import Header from '@/components/Header';
 import {ReactNode, useState} from 'react';
 import {lato} from '@/util/fonts';
+import {Tag} from '@/lib/tags';
 
 const Button = (props: {
   onClick: () => void;
@@ -28,7 +29,7 @@ const Button = (props: {
   );
 };
 
-export default function Location() {
+export default function Location({tags}: {tags: Tag[]}) {
   const [trip, setTrip] = useState<Trip>(null);
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
@@ -38,7 +39,7 @@ export default function Location() {
       <div className="flex flex-col md:h-full md:overflow-y-hidden">
         <Header />
         <div className="flex-2 md:h-full relative md:overflow-y-hidden">
-          <LocationEntityContainer id={id} />
+          <LocationEntityContainer allTags={tags} id={id} />
         </div>
       </div>
     );

@@ -8,13 +8,16 @@ import Gallery from '@/components/gallery/Gallery';
 import {useRef, useState} from 'react';
 import LocationRelativeNavigation from './LocationRelativeNavigation';
 import useIsMobile from '@/util/useIsMobile';
+import {Tag} from '@/lib/tags';
 
 export default function LocationEntry({
+  allTags = [],
   isLoading = false,
   photos = [],
   ...props
 }: LocationByIdResult & {
   isLoading?: boolean;
+  allTags?: Tag[];
 }) {
   const galleryParentRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -52,6 +55,7 @@ export default function LocationEntry({
               />
             ) : (
               <Gallery
+                tags={allTags}
                 // @ts-expect-error its a div
                 galleryParentRef={galleryParentRef}
                 photos={photos}

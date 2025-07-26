@@ -5,8 +5,9 @@ import Image from 'next/image';
 import {getClassNamesByFileName, getResourceUrl} from './util';
 import {motion} from 'framer-motion';
 import './GalleryItem.css';
-import {RefObject, useCallback, useEffect, useRef} from 'react';
+import {ReactNode, RefObject, useCallback, useEffect, useRef} from 'react';
 import {useInView} from 'react-intersection-observer';
+import GalleryItemDetailsButton from './GalleryItemDetailsButton';
 
 const priorityIndices = [0, 3, 4, 6, 8, 13];
 
@@ -37,6 +38,8 @@ export default function GalleryItem({
   photo,
   onClick,
   galleryParentRef,
+  children,
+  closeButton,
 }: {
   isSelected: boolean;
   selectedPhotoExists: boolean;
@@ -44,6 +47,8 @@ export default function GalleryItem({
   photo: PhotoMetadataWithTags;
   onClick: (index: number | null) => void;
   galleryParentRef?: RefObject<HTMLDivElement>;
+  children?: ReactNode;
+  closeButton: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const {ref: inViewRef, inView} = useInView({
@@ -84,15 +89,11 @@ export default function GalleryItem({
   }, [isSelected]);
 
   const handleClick = () => {
-    if (isSelected) {
-      onClick(null);
-    } else {
-      previousScrollData.current = {
-        elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
-        to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
-      };
-      onClick(index);
-    }
+    previousScrollData.current = {
+      elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
+      to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
+    };
+    onClick(index);
   };
 
   return (
@@ -108,29 +109,41 @@ export default function GalleryItem({
       } relative min-h-[120px]`}
     >
       {inView && (
-        <Image
-          priority={priority}
-          src={getResourceUrl(
-            photo.file_name,
-            isSelected || priority
-              ? undefined
-              : {
-                  isThumbnail: true,
-                  ext: 'webp',
-                }
+        <>
+          <Image
+            priority={priority}
+            src={getResourceUrl(
+              photo.file_name,
+              isSelected || priority
+                ? undefined
+                : {
+                    isThumbnail: true,
+                    ext: 'webp',
+                  }
+            )}
+            alt={`${photo.file_name} - ${photo.id}`}
+            fill
+            className={`rounded opacity-90 md:opacity-60 hover:opacity-100 ${
+              isSelected
+                ? 'GalleryItem-selectedPhoto opacity-100 md:opacity-100 object-contain'
+                : `object-cover ${getClassNamesByFileName(
+                    photo.file_name
+                  )} cursor-pointer`
+            }`}
+            {...(!isSelected ? {onClick: handleClick} : {})}
+            {...(photo.blur
+              ? {placeholder: 'blur', blurDataURL: photo.blur}
+              : {})}
+          />
+          {isSelected && (
+            <>
+              <GalleryItemDetailsButton {...photo}>
+                {children}
+              </GalleryItemDetailsButton>
+              {closeButton}
+            </>
           )}
-          alt={`${photo.file_name} - ${photo.id}`}
-          fill
-          className={`cursor-pointer rounded opacity-90 md:opacity-60 hover:opacity-100 ${
-            isSelected
-              ? 'GalleryItem-selectedPhoto opacity-100 md:opacity-100 object-contain'
-              : `object-cover ${getClassNamesByFileName(photo.file_name)}`
-          }`}
-          onClick={handleClick}
-          {...(photo.blur
-            ? {placeholder: 'blur', blurDataURL: photo.blur}
-            : {})}
-        />
+        </>
       )}
     </motion.div>
   );

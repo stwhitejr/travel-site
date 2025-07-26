@@ -20,6 +20,7 @@ import LocationDescription from './LocationDescription';
 import {updateLocation} from '@/app/actions/updateLocation';
 import AdminButton from '@/components/AdminButton';
 import LocationDelete from './LocationDelete';
+import LocationDates from './LocationDates';
 
 export default function LocationIntro({
   condensed,
@@ -38,12 +39,6 @@ export default function LocationIntro({
     description: string;
     index: number | null;
   }>(null);
-
-  const handleClickCoordinates = () => {
-    if (location.coordinates) {
-      window.navigator.clipboard.writeText(location.coordinates?.join(', '));
-    }
-  };
 
   const handleClickSubmit = async () => {
     if (draft) {
@@ -79,7 +74,7 @@ export default function LocationIntro({
         <>
           <div className="flex-2 md:flex-1 min-h-20">{list}</div>
           <div className="flex-1 md:h-full flex gap-5 md:gap-2 flex-row md:flex-col justify-between p-4 md:pr-20">
-            <div className="md:max-w-[400px]">
+            <div className="flex-2 md:flex-none md:max-w-[400px]">
               <h1 className={`${anton.className} md:text-2xl`}>
                 <LocationTitle
                   title={draft?.title || location.title}
@@ -98,7 +93,7 @@ export default function LocationIntro({
                 />
               </h2>
               {!isEditing && (
-                <div className="flex items-center pt-2">
+                <div className="flex items-center gap-2 pt-4 flex-wrap">
                   <a
                     target="_blank"
                     href={`https://www.google.com/maps/search/${location.coordinates?.join(
@@ -107,12 +102,17 @@ export default function LocationIntro({
                   >
                     <MapPinnedIcon className="w-5" />
                   </a>
-                  <div
-                    onClick={handleClickCoordinates}
+                  {/* <div
+                    onClick={() => {
+                      if (location.coordinates) {
+                        window.navigator.clipboard.writeText(location.coordinates?.join(', '));
+                      }
+                    }}
                     className={`cursor-copy text-sm pl-2 ${lato.className}`}
                   >
                     {location.coordinates?.join(', ')}
-                  </div>
+                  </div> */}
+                  <LocationDates photos={photos} />
                 </div>
               )}
             </div>
@@ -128,7 +128,7 @@ export default function LocationIntro({
               </div>
             )}
             {isDeleting && <LocationDelete id={location.id} photos={photos} />}
-            <div className="flex gap-2">
+            <div className="flex-1 md:flex-none text-right md:text-left m-[-4px]">
               <LocationIcons photos={photos} />
             </div>
             {process.env.NODE_ENV === 'development' && (

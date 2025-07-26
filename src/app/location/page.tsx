@@ -1,10 +1,12 @@
 import {Suspense} from 'react';
 import Location from './components/Location';
+import {getAllTags} from '@/lib/tags';
 
-export default function LocationPage() {
+export default async function LocationPage() {
+  const tagsResponse = await getAllTags();
   return (
     <Suspense>
-      <Location />
+      <Location tags={tagsResponse.data || []} />
     </Suspense>
   );
 }

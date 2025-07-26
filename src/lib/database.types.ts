@@ -45,7 +45,13 @@ export type Database = {
         Row: {
           camera: string | null;
           blur: string | null;
-          date: string | null;
+          date: {
+            day: number;
+            hour: number;
+            month: number;
+            year: number;
+            rawValue: string;
+          } | null;
           file_name: string;
           height: number | null;
           id: number;
@@ -154,7 +160,13 @@ export type Database = {
         Row: {
           camera: string | null;
           blur: string | null;
-          date: string | null;
+          date: {
+            day: number;
+            hour: number;
+            month: number;
+            year: number;
+            rawValue: string;
+          } | null;
           file_name: string | null;
           height: number | null;
           id: number | null;

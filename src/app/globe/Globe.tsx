@@ -34,7 +34,7 @@ const getGlobeCoordinatesBySelectedMarker = (
     return {
       latitude: match.coordinates[0],
       longitude: match.coordinates[1],
-      zoom: 10,
+      zoom: 6,
       bearing: 0,
       pitch: 0,
     } as ViewState;
@@ -123,6 +123,7 @@ export default function Globe({
           latitude={coordinates[0]}
           longitude={coordinates[1]}
           anchor="bottom"
+          className={`${selectedMarker === id ? 'z-10' : ''}`}
         >
           <MarkerComponent
             selectedMarker={selectedMarker}

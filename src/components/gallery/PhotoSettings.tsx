@@ -33,15 +33,17 @@ export default function PhotoSettings({
   };
 
   return (
-    <div className="p-2 gap-1 bg-slate-500">
+    <div className="gap-1">
       <div className="flex gap-1">
         <TrashIcon
+          size={15}
           className="cursor-pointer"
           key={rating}
           onClick={() => handleClickRating(0)}
         />
         {ratingArray.map((rating) => (
           <Star
+            size={15}
             key={rating}
             onClick={() => handleClickRating(rating + 1)}
             className="text-amber-200 cursor-pointer"
@@ -49,13 +51,14 @@ export default function PhotoSettings({
         ))}
         {ratingLeftover.map((entry) => (
           <StarHalf
+            size={15}
             className="cursor-pointer"
             key={entry}
             onClick={() => handleClickRating(entry + 1 + rating)}
           />
         ))}
       </div>
-      <div className="pt-2 flex gap-2 flex-wrap">
+      <div className="pt-2 flex text-xs gap-2 flex-wrap">
         {allTags.map((tag) => {
           const existing = existingTags.includes(tag.id);
           return (
@@ -63,7 +66,7 @@ export default function PhotoSettings({
               key={tag.id}
               className={`${
                 existing ? 'bg-amber-600 ' : 'bg-slate-600 '
-              }text-white rounded-2xl p-2 text-center text-sm cursor-pointer $`}
+              }text-white rounded-2xl p-2 text-center cursor-pointer $`}
               onClick={() => handleClickTag(tag, existing)}
             >
               {tag.name}
