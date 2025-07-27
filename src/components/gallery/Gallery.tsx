@@ -2,7 +2,7 @@
 
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import useGallery from './useGallery';
-import {FC, Fragment, RefObject, useEffect, useMemo, useState} from 'react';
+import {FC, Fragment, useEffect, useMemo, useState} from 'react';
 import GalleryItem from './GalleryItem';
 import {Tag} from '@/lib/tags';
 import PhotoSettings from './PhotoSettings';
@@ -34,7 +34,6 @@ interface GalleryProps {
   photos: PhotoMetadataWithTags[];
   onClick?: (arg: number | null) => void;
   AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
-  galleryParentRef?: RefObject<HTMLDivElement>;
   filterPhotosWithNoRating?: boolean;
   tags?: Tag[];
 }
@@ -43,12 +42,13 @@ export default function Gallery({
   photos,
   onClick,
   AutoPlayButton,
-  galleryParentRef,
   filterPhotosWithNoRating,
   tags,
 }: GalleryProps) {
   const isMobile = useIsMobile();
   const [autoPlay, setAutoPlay] = useState(false);
+  const [scrollToIndex, setScrollToIndex] = useState<null | number>(null);
+
   const sortedPhotos = useMemo(() => {
     return (
       filterPhotosWithNoRating
@@ -59,10 +59,19 @@ export default function Gallery({
   const {selectedPhoto, setSelectedPhotoIndex, selectedPhotoIndex} =
     useGallery(sortedPhotos);
 
-  const handleClick = (index: number | null) => {
+  const handleClick = (
+    index: number | null,
+    _scrollToIndex?: number | null
+  ) => {
     setAutoPlay(false);
     setSelectedPhotoIndex(index);
     onClick?.(index);
+
+    if (typeof _scrollToIndex !== 'undefined' && _scrollToIndex !== null) {
+      setScrollToIndex(_scrollToIndex);
+    } else if (index === null && scrollToIndex !== null) {
+      setScrollToIndex(null);
+    }
   };
 
   useEffect(() => {
@@ -131,7 +140,7 @@ export default function Gallery({
 
   const closeButton = (
     <div
-      onClick={() => setSelectedPhotoIndex(null)}
+      onClick={() => handleClick(null, selectedPhotoIndex)}
       className={`absolute p-4 z-10 rounded-full top-2 right-2 drop-shadow-md bg-slate-800  text-white cursor-pointer`}
     >
       <XIcon size={20} />
@@ -172,9 +181,9 @@ export default function Gallery({
               photo={photo}
               index={index}
               isSelected={isSelected}
+              shouldScrollTo={scrollToIndex === index}
               selectedPhotoExists={!!selectedPhoto}
               onClick={handleClick}
-              galleryParentRef={galleryParentRef}
               closeButton={closeButton}
             >
               {isSelected && process.env.NODE_ENV === 'development' && (
@@ -185,7 +194,7 @@ export default function Gallery({
         );
       })}
       {/* Creat extra grid items so the photos at the bottom of somethign to span */}
-      {selectedPhoto && (
+      {!isMobile && selectedPhoto && (
         <>
           <div className="h-full min-h-[120px]">&nbsp;</div>
           <div className="h-full min-h-[120px]">&nbsp;</div>

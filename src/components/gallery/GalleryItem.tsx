@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {getClassNamesByFileName, getResourceUrl} from './util';
 import {motion} from 'framer-motion';
 import './GalleryItem.css';
-import {ReactNode, RefObject, useCallback, useEffect, useRef} from 'react';
+import {ReactNode, useCallback, useEffect, useRef} from 'react';
 import {useInView} from 'react-intersection-observer';
 import GalleryItemDetailsButton from './GalleryItemDetailsButton';
 
@@ -37,18 +37,18 @@ export default function GalleryItem({
   index,
   photo,
   onClick,
-  galleryParentRef,
   children,
   closeButton,
+  shouldScrollTo,
 }: {
   isSelected: boolean;
   selectedPhotoExists: boolean;
   index: number;
   photo: PhotoMetadataWithTags;
-  onClick: (index: number | null) => void;
-  galleryParentRef?: RefObject<HTMLDivElement>;
+  onClick: (index: number | null, scrollToIndex?: number | null) => void;
   children?: ReactNode;
   closeButton: ReactNode;
+  shouldScrollTo?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const {ref: inViewRef, inView} = useInView({
@@ -65,35 +65,18 @@ export default function GalleryItem({
     [inViewRef]
   );
 
-  const previousScrollData = useRef({elementType: 'window', to: null} as {
-    elementType: 'window' | 'ref';
-    to: number | null;
-  });
-
   const priority = priorityIndices.includes(index);
 
   useEffect(() => {
-    if (isSelected) {
-      ref.current?.scrollIntoView({behavior: 'smooth'});
-    } else if (previousScrollData.current.to !== null) {
-      (previousScrollData.current.elementType === 'window'
-        ? window
-        : galleryParentRef?.current
-      )?.scrollTo({
-        top: previousScrollData.current.to,
-        behavior: 'smooth',
-      });
-      previousScrollData.current.to = null;
+    if (shouldScrollTo) {
+      ref.current?.scrollIntoView({behavior: 'instant'});
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSelected]);
+  }, [shouldScrollTo]);
 
   const handleClick = () => {
-    previousScrollData.current = {
-      elementType: !!galleryParentRef?.current.scrollTop ? 'ref' : 'window',
-      to: galleryParentRef?.current.scrollTop || window.scrollY || 0,
-    };
-    onClick(index);
+    onClick(index, index);
   };
 
   return (

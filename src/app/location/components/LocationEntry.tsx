@@ -5,7 +5,7 @@ import {LocationByIdResult} from '@/lib/location';
 import SubHeader from '@/components/SubHeader';
 import LocationIntro from './LocationIntro';
 import Gallery from '@/components/gallery/Gallery';
-import {useRef, useState} from 'react';
+import {useState} from 'react';
 import LocationRelativeNavigation from './LocationRelativeNavigation';
 import useIsMobile from '@/util/useIsMobile';
 import {Tag} from '@/lib/tags';
@@ -19,7 +19,6 @@ export default function LocationEntry({
   isLoading?: boolean;
   allTags?: Tag[];
 }) {
-  const galleryParentRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [isCondensed, setIsCondensed] = useState<null | boolean>(null);
 
@@ -44,10 +43,7 @@ export default function LocationEntry({
             isCondensed ? 'h-[85%]' : 'md:h-[60%]'
           }`}
         >
-          <div
-            ref={galleryParentRef}
-            className="flex-1 md:h-full md:overflow-y-auto"
-          >
+          <div className="flex-1 md:h-full md:overflow-y-auto">
             {isLoading ? (
               <LoaderPinwheel
                 size={50}
@@ -56,8 +52,6 @@ export default function LocationEntry({
             ) : (
               <Gallery
                 tags={allTags}
-                // @ts-expect-error its a div
-                galleryParentRef={galleryParentRef}
                 photos={photos}
                 onClick={() => {
                   if (isCondensed === null && !isMobile) {
