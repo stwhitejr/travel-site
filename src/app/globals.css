@@ -28,3 +28,18 @@ body {
 .mapboxgl-control-container {
   display: none;
 }
+
+@keyframes cinematic-pan {
+  0% {
+    transform: scale(1.1) translateY(2%);
+    filter: blur(8px);
+  }
+  100% {
+    transform: scale(1.2) translateY(-2%);
+    filter: blur(0);
+  }
+}
+
+.cinematic-pan {
+  animation: cinematic-pan 1.5s ease-out forwards;
+}

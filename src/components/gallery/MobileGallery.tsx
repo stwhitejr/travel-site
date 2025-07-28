@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import {Swiper, SwiperSlide} from 'swiper/react';
-import {Pagination, Keyboard, EffectCreative} from 'swiper/modules';
+import {Pagination, Keyboard, EffectCreative, Virtual} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -11,7 +11,8 @@ import {PhotoMetadataWithTags} from '@/lib/photos';
 import {getResourceUrl} from './util';
 import {anton} from '@/util/fonts';
 import GalleryItemDetailsButton from './GalleryItemDetailsButton';
-import {ReactNode} from 'react';
+import {ReactNode, useEffect} from 'react';
+import {usePageSliderContext} from '../page_slider/PageSlider';
 
 const MobileGallery = ({
   photos,
@@ -22,14 +23,26 @@ const MobileGallery = ({
   photos: PhotoMetadataWithTags[];
   selectedPhotoIndex: number;
   onClick: (index: number) => void;
-  closeButton: ReactNode;
+  closeButton?: ReactNode;
 }) => {
+  const pageSliderContext = usePageSliderContext();
+  useEffect(() => {
+    if (pageSliderContext.disableSwiper) {
+      pageSliderContext.disableSwiper();
+    }
+    return () => {
+      if (pageSliderContext.enableSwiper) {
+        pageSliderContext.enableSwiper();
+      }
+    };
+  }, [pageSliderContext]);
   return (
     <div className={`${anton.className} fixed inset-0 z-50 bg-black`}>
       <Swiper
+        virtual
         initialSlide={selectedPhotoIndex}
         className="w-full h-full"
-        modules={[EffectCreative, Pagination, Keyboard]}
+        modules={[EffectCreative, Pagination, Keyboard, Virtual]}
         keyboard={{enabled: true}}
         pagination={{
           type: 'fraction',
@@ -80,11 +93,12 @@ const MobileGallery = ({
           );
         })}
 
-        {photos[selectedPhotoIndex] && (
-          <GalleryItemDetailsButton {...photos[selectedPhotoIndex]} />
-        )}
-
-        {closeButton}
+        <div className="absolute top-5 right-5 z-10 text-right">
+          {closeButton}
+          {photos[selectedPhotoIndex] && (
+            <GalleryItemDetailsButton {...photos[selectedPhotoIndex]} />
+          )}
+        </div>
       </Swiper>
     </div>
   );

@@ -1,8 +1,6 @@
 import {getPhotosByTag} from '@/lib/photos';
-import {getAllTags} from '@/lib/tags';
-import SubHeader from '@/components/SubHeader';
-import CategoryRelativeNavigation from '../components/CategoryRelativeNavigation';
-import Category from '../components/Category';
+import {getTagsWithHero} from '@/lib/tags';
+import CategorySlider from '../components/CategorySlider';
 
 export default async function CategoryPage({
   params,
@@ -10,29 +8,25 @@ export default async function CategoryPage({
   params: Promise<{category: string}>;
 }) {
   const {category} = await params;
-  const {data} = await getPhotosByTag(parseInt(category, 10));
-  const tagsResponse = await getAllTags();
+  const categoryId = parseInt(category, 10);
+  const {data} = await getPhotosByTag(categoryId);
+  const tagsResponse = await getTagsWithHero();
 
   const getCategoryName = (): {name: string; description?: string} => {
-    const match = (tagsResponse.data || []).find((tag) => tag.id == category);
-    return match || {name: category};
+    const match = (tagsResponse.data || []).find(
+      (tag) => tag.tag_id == category
+    );
+    return match
+      ? {name: match.tag_name, description: match.tag_description}
+      : {name: category};
   };
 
   return (
-    <div className="flex flex-col h-full md:overflow-y-hidden">
-      <div>
-        <SubHeader>
-          <CategoryRelativeNavigation
-            tags={tagsResponse.data || []}
-            id={parseInt(category, 10)}
-          />
-        </SubHeader>
-      </div>
-      <Category
-        photos={data || []}
-        categoryName={getCategoryName()}
-        tags={tagsResponse.data || []}
-      />
-    </div>
+    <CategorySlider
+      id={categoryId}
+      photos={data || []}
+      categoryName={getCategoryName()}
+      tags={tagsResponse.data || []}
+    />
   );
 }

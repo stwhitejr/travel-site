@@ -17,7 +17,7 @@ export default function GalleryItemDetailsButton({
         onMouseOver={() => setIsOpen(true)}
         onClick={() => setIsOpen(true)}
         onMouseOut={() => setIsOpen(false)}
-        className={`absolute p-4 z-10 rounded-lg top-2 left-2 drop-shadow-md bg-slate-800 ${
+        className={`p-2 mt-2 text-left rounded-lg drop-shadow-md bg-slate-800 ${
           isOpen ? 'w-[200px] bg-red-50' : ''
         }`}
       >

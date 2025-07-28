@@ -2,27 +2,26 @@
 
 import {lato} from '@/util/fonts';
 import {ChevronLeftIcon, ChevronRightIcon} from 'lucide-react';
-import Link from 'next/link';
 import {ReactNode} from 'react';
 
 export const SubHeaderLink = ({
-  href,
   children,
+  onClick,
   dir = 'left',
 }: {
-  href: string;
+  onClick: () => void;
   children: ReactNode;
   dir?: 'left' | 'right';
 }) => {
   const IconComponent = dir === 'left' ? ChevronLeftIcon : ChevronRightIcon;
   const icon = <IconComponent className="inline w-3" />;
   return (
-    <Link
-      href={href}
-      className={`flex items-center gap-2 hover:underline text-[#dfe3eb] hover:text-white`}
+    <button
+      onClick={onClick}
+      className={`cursor-pointer flex items-center gap-2 hover:underline text-[#dfe3eb] hover:text-white`}
     >
       {dir === 'left' && icon} {children} {dir === 'right' && icon}
-    </Link>
+    </button>
   );
 };
 

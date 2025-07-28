@@ -53,6 +53,7 @@ export default function LocationIcons(props: {
       if (tagName in iconsByTagName) {
         const Icon = iconsByTagName[tagName];
         if (Icon) {
+          // TODO: add links and title text
           acc.push(
             <Icon className="inline m-[4px]" key={tagName} name={tagName} />
           );

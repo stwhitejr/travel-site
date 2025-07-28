@@ -9,6 +9,8 @@ import PhotoSettings from './PhotoSettings';
 import MobileGallery from './MobileGallery';
 import useIsMobile from '@/util/useIsMobile';
 import {XIcon} from 'lucide-react';
+import SwipeToCallback from './SwipeToCallback';
+import {usePageSliderContext} from '../page_slider/PageSlider';
 
 const incrementIndex = ({
   index,
@@ -45,7 +47,9 @@ export default function Gallery({
   filterPhotosWithNoRating,
   tags,
 }: GalleryProps) {
+  const pageSliderContext = usePageSliderContext();
   const isMobile = useIsMobile();
+
   const [autoPlay, setAutoPlay] = useState(false);
   const [scrollToIndex, setScrollToIndex] = useState<null | number>(null);
 
@@ -76,10 +80,15 @@ export default function Gallery({
 
   useEffect(() => {
     if (autoPlay) {
+      if (pageSliderContext.disableSwiper) {
+        pageSliderContext.disableSwiper();
+      }
       let index = 1;
       setSelectedPhotoIndex(0);
+      setScrollToIndex(0);
       const interval = setInterval(() => {
         setSelectedPhotoIndex(index);
+        setScrollToIndex(index);
         index = incrementIndex({
           index,
           count: sortedPhotos.length,
@@ -99,6 +108,9 @@ export default function Gallery({
       return () => {
         clearInterval(interval);
         window.removeEventListener('keydown', listener);
+        if (pageSliderContext.enableSwiper) {
+          pageSliderContext.enableSwiper();
+        }
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,29 +122,35 @@ export default function Gallery({
         return;
       }
       if (e.key === 'ArrowRight') {
-        setSelectedPhotoIndex(
-          incrementIndex({
-            index: selectedPhotoIndex,
-            count: sortedPhotos.length,
-            dir: 'right',
-          })
-        );
+        const newIndex = incrementIndex({
+          index: selectedPhotoIndex,
+          count: sortedPhotos.length,
+          dir: 'right',
+        });
+        setSelectedPhotoIndex(newIndex);
+        setScrollToIndex(newIndex);
       } else if (e.key === 'ArrowLeft') {
-        setSelectedPhotoIndex(
-          incrementIndex({
-            index: selectedPhotoIndex,
-            count: sortedPhotos.length,
-            dir: 'left',
-          })
-        );
+        const newIndex = incrementIndex({
+          index: selectedPhotoIndex,
+          count: sortedPhotos.length,
+          dir: 'left',
+        });
+        setSelectedPhotoIndex(newIndex);
+        setScrollToIndex(newIndex);
       }
     };
 
     if (!!selectedPhoto) {
+      if (pageSliderContext.disableSwiper) {
+        pageSliderContext.disableSwiper();
+      }
       window.addEventListener('keydown', listener);
     }
 
     return () => {
+      if (pageSliderContext.enableSwiper) {
+        pageSliderContext.enableSwiper();
+      }
       window.removeEventListener('keydown', listener);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -141,70 +159,75 @@ export default function Gallery({
   const closeButton = (
     <div
       onClick={() => handleClick(null, selectedPhotoIndex)}
-      className={`absolute p-4 z-10 rounded-full top-2 right-2 drop-shadow-md bg-slate-800  text-white cursor-pointer`}
+      className={`inline-block p-2 rounded-full drop-shadow-md bg-slate-800  text-white cursor-pointer`}
     >
-      <XIcon size={20} />
+      <XIcon />
     </div>
   );
 
-  if (isMobile && selectedPhotoIndex !== null) {
-    return (
-      <MobileGallery
-        onClick={handleClick}
-        closeButton={closeButton}
-        selectedPhotoIndex={selectedPhotoIndex}
-        photos={sortedPhotos}
-      />
-    );
-  }
-
   return (
-    <div className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}>
-      {AutoPlayButton && (
-        <AutoPlayButton
-          isAutoPlaying={autoPlay}
-          onClick={() => {
-            if (autoPlay) {
-              setSelectedPhotoIndex(null);
-            }
-            setAutoPlay(!autoPlay);
-          }}
-        />
+    <>
+      {isMobile && selectedPhotoIndex !== null && (
+        <SwipeToCallback
+          callback={() => handleClick(null)}
+          className="fixed inset-0 z-50 touch-none"
+        >
+          <MobileGallery
+            onClick={handleClick}
+            selectedPhotoIndex={selectedPhotoIndex}
+            photos={sortedPhotos}
+          />
+        </SwipeToCallback>
       )}
+      <div className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}>
+        {AutoPlayButton && (
+          <AutoPlayButton
+            isAutoPlaying={autoPlay}
+            onClick={() => {
+              if (autoPlay) {
+                setSelectedPhotoIndex(null);
+              }
+              setAutoPlay(!autoPlay);
+            }}
+          />
+        )}
 
-      {sortedPhotos.map((photo, index) => {
-        const isSelected =
-          selectedPhoto?.id === photo.id && index < photos.length;
-        return (
-          <Fragment key={photo.id}>
-            <GalleryItem
-              photo={photo}
-              index={index}
-              isSelected={isSelected}
-              shouldScrollTo={scrollToIndex === index}
-              selectedPhotoExists={!!selectedPhoto}
-              onClick={handleClick}
-              closeButton={closeButton}
-            >
-              {isSelected && process.env.NODE_ENV === 'development' && (
-                <PhotoSettings allTags={tags} {...photo} />
-              )}
-            </GalleryItem>
-          </Fragment>
-        );
-      })}
-      {/* Creat extra grid items so the photos at the bottom of somethign to span */}
-      {!isMobile && selectedPhoto && (
-        <>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-          <div className="h-full min-h-[120px]">&nbsp;</div>
-        </>
-      )}
-    </div>
+        {sortedPhotos.map((photo, index) => {
+          const isSelected =
+            !isMobile &&
+            selectedPhoto?.id === photo.id &&
+            index < photos.length;
+          return (
+            <Fragment key={photo.id}>
+              <GalleryItem
+                photo={photo}
+                index={index}
+                isSelected={isSelected}
+                shouldScrollTo={!isMobile && scrollToIndex === index}
+                selectedPhotoExists={!!selectedPhoto}
+                onClick={handleClick}
+                closeButton={closeButton}
+              >
+                {isSelected && process.env.NODE_ENV === 'development' && (
+                  <PhotoSettings allTags={tags} {...photo} />
+                )}
+              </GalleryItem>
+            </Fragment>
+          );
+        })}
+        {/* Creat extra grid items so the photos at the bottom of somethign to span */}
+        {!isMobile && selectedPhoto && (
+          <>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+            <div className="h-full min-h-[120px]">&nbsp;</div>
+          </>
+        )}
+      </div>
+    </>
   );
 }

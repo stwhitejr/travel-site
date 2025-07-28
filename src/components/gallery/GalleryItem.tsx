@@ -71,16 +71,21 @@ export default function GalleryItem({
     if (shouldScrollTo) {
       ref.current?.scrollIntoView({behavior: 'instant'});
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldScrollTo]);
 
   const handleClick = () => {
     onClick(index, index);
   };
 
+  // TODO: play with settings here. make it faster after initial load
   return (
     <motion.div
+      initial={{opacity: 0}}
+      transition={{
+        duration: 0.5,
+      }}
+      animate={{opacity: 1}}
+      exit={{opacity: 0}}
       ref={setRefs}
       layout
       className={`${
@@ -119,12 +124,12 @@ export default function GalleryItem({
               : {})}
           />
           {isSelected && (
-            <>
+            <div className="absolute top-2 right-5 text-right">
+              {closeButton}
               <GalleryItemDetailsButton {...photo}>
                 {children}
               </GalleryItemDetailsButton>
-              {closeButton}
-            </>
+            </div>
           )}
         </>
       )}

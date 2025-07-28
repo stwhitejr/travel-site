@@ -1,12 +1,12 @@
 'use client';
 
 import {useSearchParams} from 'next/navigation';
-import LocationEntityContainer from './LocationEntryContainer';
 import LocationList, {Trip} from './LocationList';
 import Header from '@/components/Header';
 import {ReactNode, useState} from 'react';
 import {lato} from '@/util/fonts';
 import {Tag} from '@/lib/tags';
+import LocationSlider from './LocationSlider';
 
 const Button = (props: {
   onClick: () => void;
@@ -36,10 +36,10 @@ export default function Location({tags}: {tags: Tag[]}) {
 
   if (id) {
     return (
-      <div className="flex flex-col md:h-full md:overflow-y-hidden">
+      <div className="flex flex-col h-full md:overflow-y-hidden">
         <Header />
         <div className="flex-2 md:h-full relative md:overflow-y-hidden">
-          <LocationEntityContainer allTags={tags} id={id} />
+          <LocationSlider id={id} allTags={tags} />
         </div>
       </div>
     );

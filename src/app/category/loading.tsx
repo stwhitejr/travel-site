@@ -1,9 +1,5 @@
-import LoadingIcon from '@/components/LoadingIcon';
+import Loading from '@/app/loading';
 
-export default function CategoryLoading() {
-  return (
-    <div className="flex h-full">
-      <LoadingIcon />
-    </div>
-  );
+export default function LoadingCategory() {
+  return <Loading />;
 }

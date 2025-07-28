@@ -32,7 +32,7 @@ export default function GalleryItemDetails({
 
   const {data: locationData} = useLocationById({id: props.location_id});
   return (
-    <div className="flex gap-2 items-start justify-between">
+    <div className="p-2 flex gap-2 items-start justify-between">
       <div
         className={`flex-wrap items-start flex flex-col gap-5 text-sm ${lato.className}`}
       >
