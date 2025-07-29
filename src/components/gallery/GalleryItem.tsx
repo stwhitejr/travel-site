@@ -77,15 +77,8 @@ export default function GalleryItem({
     onClick(index, index);
   };
 
-  // TODO: play with settings here. make it faster after initial load
   return (
     <motion.div
-      initial={{opacity: 0}}
-      transition={{
-        duration: 0.5,
-      }}
-      animate={{opacity: 1}}
-      exit={{opacity: 0}}
       ref={setRefs}
       layout
       className={`${

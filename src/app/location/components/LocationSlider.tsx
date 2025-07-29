@@ -6,16 +6,20 @@ import useRelativeLocations from '../hooks/useRelativeLocations';
 import LocationEntry from './LocationEntry';
 import {useRouter, useSearchParams} from 'next/navigation';
 import 'swiper/css';
-import Loading from '@/app/loading';
+import Loading from '@/components/Loading';
 import LocationSliderIntro from './LocationSliderIntro';
 import PageSlider, {
   CurrentPageComponentProps,
 } from '@/components/page_slider/PageSlider';
 
-export default function LocationSlider(props: {id: string; allTags: Tag[]}) {
+export default function LocationSlider(props: {
+  id: string | number;
+  allTags: Tag[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const parsedId = parseInt(props.id, 10);
+  const parsedId =
+    typeof props.id === 'string' ? parseInt(props.id, 10) : props.id;
 
   const {previous, next} = useRelativeLocations(parsedId);
 

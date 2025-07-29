@@ -3,7 +3,6 @@
 import {Suspense, useCallback, useMemo} from 'react';
 import {useRouter} from 'next/navigation';
 import 'swiper/css';
-import Loading from '@/app/loading';
 import CategorySliderIntro from './CategorySliderIntro';
 import PageSlider, {
   CurrentPageComponentProps,
@@ -30,7 +29,7 @@ export default function CategorySlider(props: CategoryProps) {
 
   const CurrentPageComponent = useMemo(() => {
     const CurrentPage = (_props: CurrentPageComponentProps) => (
-      <Suspense fallback={<Loading />}>
+      <Suspense>
         <Category {...props} {..._props} />
       </Suspense>
     );
@@ -39,7 +38,6 @@ export default function CategorySlider(props: CategoryProps) {
 
   const onSlideFullyTransitioned = useCallback((id: string | number) => {
     const newId = typeof id === 'string' ? parseInt(id, 10) : id;
-    // TODO: could we have this page render earlier so we don't see a loader? can we use this slider intro as the fallback?
     router.push(`/category/${newId}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -17,6 +17,7 @@ export default function LocationEntry({
   allTags,
   onChangePage,
   withinView = true,
+  slideDirection,
 }: CurrentPageComponentProps & {
   allTags: Tag[];
 }) {
@@ -43,6 +44,7 @@ export default function LocationEntry({
             location={location}
             photos={location.photos}
             onClickResize={setIsCondensed}
+            slideDirection={slideDirection}
           />
         </div>
 

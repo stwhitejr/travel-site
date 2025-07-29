@@ -1,4 +1,5 @@
 import {PhotoMetadataWithTags} from '@/lib/photos';
+import {Tag} from '@/lib/tags';
 import {
   BadgeQuestionMark,
   BikeIcon,
@@ -15,6 +16,7 @@ import {
   TruckIcon,
   WavesIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import {ReactNode, useMemo} from 'react';
 
 export const iconsByTagName: Record<string, typeof BikeIcon> = {
@@ -38,24 +40,26 @@ export default function LocationIcons(props: {
   photos: PhotoMetadataWithTags[];
 }) {
   const icons = useMemo(() => {
-    const tags = props.photos
-      .map((photo) => photo.tags)
-      .flat()
-      .reduce((acc, entry) => {
-        if (!entry?.name) {
+    const tags = props.photos.map((photo) => photo.tags).flat();
+    const tagsById = tags.reduce((acc, tag) => {
+      if (tag.id) {
+        if (acc[tag.id]) {
           return acc;
         }
-        acc.add(entry.name);
-        return acc;
-      }, new Set<string>());
+        // @ts-expect-error its a tag
+        acc[tag.id] = tag;
+      }
+      return acc;
+    }, {} as Record<string, Tag>);
 
-    return [...tags].reduce((acc, tagName) => {
-      if (tagName in iconsByTagName) {
-        const Icon = iconsByTagName[tagName];
+    return Object.values(tagsById).reduce((acc, tag) => {
+      if (tag.name in iconsByTagName) {
+        const Icon = iconsByTagName[tag.name];
         if (Icon) {
-          // TODO: add links and title text
           acc.push(
-            <Icon className="inline m-[4px]" key={tagName} name={tagName} />
+            <Link key={tag.name} href={`/category/${tag.id}`}>
+              <Icon className="inline m-[4px]" name={tag.name} />
+            </Link>
           );
         }
       }

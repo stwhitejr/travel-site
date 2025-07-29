@@ -11,6 +11,7 @@ import useIsMobile from '@/util/useIsMobile';
 import {XIcon} from 'lucide-react';
 import SwipeToCallback from './SwipeToCallback';
 import {usePageSliderContext} from '../page_slider/PageSlider';
+import {motion} from 'framer-motion';
 
 const incrementIndex = ({
   index,
@@ -179,7 +180,15 @@ export default function Gallery({
           />
         </SwipeToCallback>
       )}
-      <div className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}>
+      <motion.div
+        initial={{opacity: 0}}
+        transition={{
+          duration: 1.5,
+        }}
+        animate={{opacity: 1}}
+        exit={{opacity: 0}}
+        className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}
+      >
         {AutoPlayButton && (
           <AutoPlayButton
             isAutoPlaying={autoPlay}
@@ -227,7 +236,7 @@ export default function Gallery({
             <div className="h-full min-h-[120px]">&nbsp;</div>
           </>
         )}
-      </div>
+      </motion.div>
     </>
   );
 }

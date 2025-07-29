@@ -27,11 +27,13 @@ export default function LocationIntro({
   location,
   photos,
   onClickResize,
+  slideDirection,
 }: {
   condensed: boolean;
   location: Location;
   photos: PhotoMetadataWithTags[];
   onClickResize?: (condensed: boolean) => void;
+  slideDirection: 'previous' | 'next';
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [draft, setDraft] = useState<null | {
@@ -64,7 +66,19 @@ export default function LocationIntro({
   const isEditing = process.env.NODE_ENV === 'development' && !!draft;
 
   return (
-    <motion.div layout className="flex flex-col md:flex-row h-full relative">
+    <motion.div
+      initial={{
+        x: slideDirection === 'previous' ? '-20%' : '20%',
+        opacity: 0,
+      }}
+      transition={{
+        type: 'spring',
+        duration: 1.5,
+      }}
+      animate={{x: 0, opacity: 1}}
+      layout
+      className="flex flex-col md:flex-row h-full relative"
+    >
       {condensed ? (
         <>
           {list}
