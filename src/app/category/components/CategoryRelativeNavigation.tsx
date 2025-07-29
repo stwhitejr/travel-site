@@ -24,12 +24,6 @@ export const useRelativeCategories = ({
     const lastIndex = tags.length - 1;
 
     const previous = tags[currentIndex === 0 ? lastIndex : previousIndex];
-    console.log(
-      'previos',
-      currentIndex === 0 ? lastIndex : previousIndex,
-      previousIndex,
-      id
-    );
     const next = tags[nextIndex >= lastIndex ? 0 : nextIndex];
     return {
       previous: previous || null,

@@ -6,6 +6,7 @@ export type Location = Database['public']['Tables']['location']['Row'];
 export type LocationWithTags = Location & {
   tags: Array<{id: number; name: string}>;
   file_name: string;
+  blur: string;
 };
 
 export interface QueryLocationsByIdOptions {
