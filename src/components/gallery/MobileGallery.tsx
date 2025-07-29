@@ -67,7 +67,7 @@ const MobileGallery = ({
 
         return (
           <SwiperSlide key={photo.file_name}>
-            <div className={`w-full h-full bg-black`}>
+            <div className={`w-full h-full bg-[#0f0e0e]`}>
               <Image
                 src={getResourceUrl(
                   photo.file_name,

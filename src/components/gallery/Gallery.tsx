@@ -174,7 +174,7 @@ export default function Gallery({
         createPortal(
           <SwipeToCallback
             callback={() => handleClick(null)}
-            className="fixed inset-0 z-50 touch-none bg-black"
+            className="fixed inset-0 z-50 touch-none bg-[#0f0e0e]"
           >
             <MobileGallery
               onClick={handleClick}

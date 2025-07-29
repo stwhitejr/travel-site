@@ -29,7 +29,7 @@ export default function LocationEntry({
 
   const location = response.data;
   return (
-    <div className="md:h-full md:overflow-y-hidden flex flex-col bg-black">
+    <div className="md:h-full md:overflow-y-hidden bg-[#0f0e0e]">
       <SubHeader>
         <LocationRelativeNavigation
           id={location.id}
@@ -37,8 +37,8 @@ export default function LocationEntry({
         />
       </SubHeader>
 
-      <div className="md:h-full md:overflow-y-hidden">
-        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[40%]'}`}>
+      <div className="md:h-full md:overflow-y-hidden flex flex-col">
+        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[30%]'}`}>
           <LocationIntro
             condensed={!!isCondensed}
             location={location}
@@ -50,7 +50,7 @@ export default function LocationEntry({
 
         <div
           className={`flex p-[10px] md:overflow-y-hidden ${
-            isCondensed ? 'h-[85%]' : 'md:h-[60%]'
+            isCondensed ? 'h-[85%]' : 'md:h-[70%]'
           }`}
         >
           <div

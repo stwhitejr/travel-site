@@ -3,6 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, {Marker, ViewState, MapRef} from 'react-map-gl/mapbox';
 import {LocationWithTags} from '@/lib/location';
 import VisualMarker from './Marker';
+import {usePageSliderContext} from '@/components/page_slider/PageSlider';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -50,6 +51,7 @@ export default function Globe({
 }: GlobeProps) {
   const saveTimeout = useRef<NodeJS.Timeout | null>(null);
   const mapRef = useRef<MapRef>(null);
+  const {disableSwiper, enableSwiper} = usePageSliderContext();
 
   const [clickedFromMap, setClickedFromMap] = useState(false);
   const [viewState, setViewState] = useState<ViewState>(() => {
@@ -108,30 +110,36 @@ export default function Globe({
   }, []);
 
   return (
-    <Map
-      ref={mapRef}
-      {...viewState}
-      onMove={handleMove}
-      mapStyle="mapbox://styles/mapbox/navigation-night-v1"
-      mapboxAccessToken={MAPBOX_TOKEN}
-      projection={{name: 'globe'}}
-      style={{width: '100%', height: '100%'}}
+    <div
+      className="w-full h-full"
+      onPointerEnter={disableSwiper}
+      onPointerLeave={enableSwiper}
     >
-      {markers.map(({id, coordinates}) => (
-        <Marker
-          key={id}
-          latitude={coordinates[0]}
-          longitude={coordinates[1]}
-          anchor="bottom"
-          className={`${selectedMarker === id ? 'z-10' : ''}`}
-        >
-          <MarkerComponent
-            selectedMarker={selectedMarker}
-            id={id}
-            onClick={() => setClickedFromMap(true)}
-          />
-        </Marker>
-      ))}
-    </Map>
+      <Map
+        ref={mapRef}
+        {...viewState}
+        onMove={handleMove}
+        mapStyle="mapbox://styles/mapbox/navigation-night-v1"
+        mapboxAccessToken={MAPBOX_TOKEN}
+        projection={{name: 'globe'}}
+        style={{width: '100%', height: '100%'}}
+      >
+        {markers.map(({id, coordinates}) => (
+          <Marker
+            key={id}
+            latitude={coordinates[0]}
+            longitude={coordinates[1]}
+            anchor="bottom"
+            className={`${selectedMarker === id ? 'z-10' : ''}`}
+          >
+            <MarkerComponent
+              selectedMarker={selectedMarker}
+              id={id}
+              onClick={() => setClickedFromMap(true)}
+            />
+          </Marker>
+        ))}
+      </Map>
+    </div>
   );
 }

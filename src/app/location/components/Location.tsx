@@ -21,7 +21,7 @@ const Button = (props: {
       } cursor-pointer text-sm tracking-wider p-1 px-4 rounded-sm  text-black ${
         props.isSelected
           ? 'bg-amber-200 opacity-100'
-          : 'bg-black text-white opacity-70 hover:opacity-100'
+          : 'bg-[#0f0e0e] text-white opacity-70 hover:opacity-100'
       }`}
     >
       {props.children}
@@ -39,7 +39,7 @@ export default function Location({tags}: {tags: Tag[]}) {
       <div className="flex flex-col h-full md:overflow-y-hidden">
         <Header />
         <div className="flex-2 md:h-full relative md:overflow-y-hidden">
-          <LocationSlider id={id} allTags={tags} />
+          <LocationSlider key={id} id={id} allTags={tags} />
         </div>
       </div>
     );
