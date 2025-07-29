@@ -9,7 +9,6 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-creative';
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {getResourceUrl} from './util';
-import {anton} from '@/util/fonts';
 import GalleryItemDetailsButton from './GalleryItemDetailsButton';
 import {ReactNode, useEffect} from 'react';
 import {usePageSliderContext} from '../page_slider/PageSlider';
@@ -37,70 +36,68 @@ const MobileGallery = ({
     };
   }, [pageSliderContext]);
   return (
-    <div className={`${anton.className} fixed inset-0 z-50 bg-black`}>
-      <Swiper
-        virtual
-        initialSlide={selectedPhotoIndex}
-        className="w-full h-full"
-        modules={[EffectCreative, Pagination, Keyboard, Virtual]}
-        keyboard={{enabled: true}}
-        pagination={{
-          type: 'fraction',
-        }}
-        effect="creative"
-        creativeEffect={{
-          prev: {
-            shadow: true,
-            translate: [0, 0, -400],
-          },
-          next: {
-            translate: ['100%', 0, 0],
-          },
-        }}
-        onSlideChange={(swiper) => {
-          if (swiper.activeIndex || swiper.activeIndex === 0) {
-            onClick(swiper.activeIndex);
-          }
-        }}
-      >
-        {photos.map((photo, index) => {
-          const isSelected = index === selectedPhotoIndex;
-          const isNear = Math.abs(index - selectedPhotoIndex) <= 1;
+    <Swiper
+      virtual
+      initialSlide={selectedPhotoIndex}
+      className="w-full h-full"
+      modules={[EffectCreative, Pagination, Keyboard, Virtual]}
+      keyboard={{enabled: true}}
+      pagination={{
+        type: 'fraction',
+      }}
+      effect="creative"
+      creativeEffect={{
+        prev: {
+          shadow: true,
+          translate: [0, 0, -400],
+        },
+        next: {
+          translate: ['100%', 0, 0],
+        },
+      }}
+      onSlideChange={(swiper) => {
+        if (swiper.activeIndex || swiper.activeIndex === 0) {
+          onClick(swiper.activeIndex);
+        }
+      }}
+    >
+      {photos.map((photo, index) => {
+        const isSelected = index === selectedPhotoIndex;
+        const isNear = Math.abs(index - selectedPhotoIndex) <= 1;
 
-          return (
-            <SwiperSlide key={photo.file_name}>
-              <div className={`w-full h-full bg-black`}>
-                <Image
-                  src={getResourceUrl(
-                    photo.file_name,
-                    isSelected || isNear
-                      ? undefined
-                      : {
-                          isThumbnail: true,
-                          ext: 'webp',
-                        }
-                  )}
-                  alt={photo.file_name}
-                  fill
-                  className="object-contain swiper-lazy"
-                  placeholder="blur"
-                  blurDataURL={photo.blur!}
-                  priority={false}
-                />
-                <div className="swiper-lazy-preloader swiper-lazy-preloader-white" />
-              </div>
-            </SwiperSlide>
-          );
-        })}
+        return (
+          <SwiperSlide key={photo.file_name}>
+            <div className={`w-full h-full bg-black`}>
+              <Image
+                src={getResourceUrl(
+                  photo.file_name,
+                  isSelected || isNear
+                    ? undefined
+                    : {
+                        isThumbnail: true,
+                        ext: 'webp',
+                      }
+                )}
+                alt={photo.file_name}
+                fill
+                className="object-contain swiper-lazy"
+                placeholder="blur"
+                blurDataURL={photo.blur!}
+                priority={false}
+              />
+              <div className="swiper-lazy-preloader swiper-lazy-preloader-white" />
+            </div>
+          </SwiperSlide>
+        );
+      })}
 
-        <div className="absolute top-5 right-5 z-10 text-right">
-          {closeButton}
-          {photos[selectedPhotoIndex] && (
-            <GalleryItemDetailsButton {...photos[selectedPhotoIndex]} />
-          )}
-        </div>
-      </Swiper>
-    </div>
+      <div className="absolute top-5 right-5 z-10 text-right">
+        {closeButton}
+        {photos[selectedPhotoIndex] && (
+          <GalleryItemDetailsButton {...photos[selectedPhotoIndex]} />
+        )}
+      </div>
+    </Swiper>
   );
 };
 

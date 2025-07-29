@@ -37,7 +37,7 @@ export default function LocationEntry({
         />
       </SubHeader>
 
-      <div className="md:h-full  md:overflow-y-hidden">
+      <div className="md:h-full md:overflow-y-hidden">
         <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[40%]'}`}>
           <LocationIntro
             condensed={!!isCondensed}

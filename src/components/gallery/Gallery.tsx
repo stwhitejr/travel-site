@@ -12,6 +12,7 @@ import {XIcon} from 'lucide-react';
 import SwipeToCallback from './SwipeToCallback';
 import {usePageSliderContext} from '../page_slider/PageSlider';
 import {motion} from 'framer-motion';
+import {createPortal} from 'react-dom';
 
 const incrementIndex = ({
   index,
@@ -168,18 +169,21 @@ export default function Gallery({
 
   return (
     <>
-      {isMobile && selectedPhotoIndex !== null && (
-        <SwipeToCallback
-          callback={() => handleClick(null)}
-          className="fixed inset-0 z-50 touch-none"
-        >
-          <MobileGallery
-            onClick={handleClick}
-            selectedPhotoIndex={selectedPhotoIndex}
-            photos={sortedPhotos}
-          />
-        </SwipeToCallback>
-      )}
+      {isMobile &&
+        selectedPhotoIndex !== null &&
+        createPortal(
+          <SwipeToCallback
+            callback={() => handleClick(null)}
+            className="fixed inset-0 z-50 touch-none bg-black"
+          >
+            <MobileGallery
+              onClick={handleClick}
+              selectedPhotoIndex={selectedPhotoIndex}
+              photos={sortedPhotos}
+            />
+          </SwipeToCallback>,
+          document.body
+        )}
       <motion.div
         initial={{opacity: 0}}
         transition={{
