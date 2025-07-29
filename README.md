@@ -26,14 +26,19 @@ Once on a location entity page we get all photos that have the correct associate
 
 <img width="1682" height="757" alt="Screenshot 2025-07-18 at 11 19 34 AM" src="https://github.com/user-attachments/assets/29fb8159-e9ca-49e1-9bc1-3f2be7e38f72" />
 
-
 Using mostly just CSS including grid, filter, and animations I'm able to create a unique (in my opinion) hand built photo gallery. Thanks to TailwindCSS I can easily adjust the grid and styles for mobile. It supports intuitive left/right key clicks or swipes and an autoplay feature on desktop.
+
+### Navigation and Swiping
+
+Using a really cool combo of SwiperJS and Framer Motion I've created a mobile app like feel within the browser. I have support for various carousel like swiping experiences within different sections of the page. You can swipe left/right while on a category or location to navigate to the next page with a visual slide transition. While on mobile you have a full screen takeover gallery when selecting a photo. You can use left/right swipes to control this gallery and you can swipe up/down to close it. Using context I can maintain which swipe controls are in effect so it doesn't try to change the page as well.
+
+https://github.com/user-attachments/assets/65562aed-44b1-4e53-91c2-d9f7dd55258f
 
 ### Loading Optimizations
 
 Thanks to NextJS, Vercel and React Intersection Observer I'm able to have a pretty clean loading experience even when loading a handful of images at a time. We do this by using blur data which is generated at ingestion time via a script. This lives with the photo metadata so we always have something to show even if the image isn't loaded yet. When unselected we use a smaller thumbnail version of the photo which is auto generated during the ingestion stage as well. When selected we use a higher resolution photo. We also use higher resolution photos by default and priority setting on NextJS `<Image>` components for the grid items that are larger.
 
-Also, because we're using NextJS with Vercel we get CDN capabilities like optimizing and caching at the server level.
+Also, because we're using NextJS with Vercel I can proxy my Supabase storage requests through Vercels CDN to cutdown on my bandwidth consumption in Supabase.
 
 ## Ingestion
 
@@ -45,15 +50,9 @@ For tagging, there's a couple scripts in there that helped me auto tag my photos
 
 I was originally never going to put in any kind of admin UI as I didn't plan on changing the data but I found myself adjusting ratings, tags and wanting to further consolidate locations. I got sick of doing in the DB so I figured why not do a quick dirty admin mode that only works when running in development. Normally I would have designed this much better but it gets the job done. I created a couple of DB functions that really help a lot such as being able to delete a location and reassign location IDs for the existing photos and re-indexing a location while shifting all the others to accomodate so I can easily control the sort.
 
-<img width="857" height="582" alt="Screenshot 2025-07-20 at 12 54 05 PM" src="https://github.com/user-attachments/assets/72500205-4bb4-4f8d-b712-54a020105f8b" />
-
-<img width="857" height="402" alt="Screenshot 2025-07-20 at 12 54 20 PM" src="https://github.com/user-attachments/assets/068084eb-3442-48f2-b9c5-3685f4594e26" />
-
-<img width="1042" height="441" alt="Screenshot 2025-07-20 at 12 54 35 PM" src="https://github.com/user-attachments/assets/d189691e-173f-4354-a11e-f4323e6b5599" />
-
-
-
-
+<img width="714" height="632" alt="Screenshot 2025-07-29 at 10 16 10 AM" src="https://github.com/user-attachments/assets/252617e3-ffee-4f68-b8e7-eab9378cc560" />
+<img width="897" height="434" alt="Screenshot 2025-07-29 at 10 16 19 AM" src="https://github.com/user-attachments/assets/20475cb3-f9ee-4a82-89dd-fe6c5ba363f0" />
+<img width="896" height="604" alt="Screenshot 2025-07-29 at 10 16 26 AM" src="https://github.com/user-attachments/assets/a1ef8604-8eef-4e53-ae26-0d53b1670526" />
 
 
 # Developing
