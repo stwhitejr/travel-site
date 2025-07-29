@@ -1,7 +1,15 @@
 export const SUPABASE_PROJECT_DOMAIN =
   'https://pajqyzcpmfrhpupdtupn.supabase.co';
-export const SUPABASE_PHOTOS_URL = `${SUPABASE_PROJECT_DOMAIN}/storage/v1/object/public/photos`;
-export const SUPABASE_VIDEOS_URL = `${SUPABASE_PROJECT_DOMAIN}/storage/v1/object/public/video`;
+
+const SUPABASE_STORAGE_PATH = '/storage/v1/object/public';
+export const SUPABASE_PHOTOS_FOLDER = `photos`;
+export const SUPABASE_VIDEOS_FOLDER = `video`;
+
+// We use vercel's built in CDN in production - see vercel.json
+const getStartingMediaPath = () =>
+  process.env.NODE_ENV === 'development'
+    ? `${SUPABASE_PROJECT_DOMAIN}${SUPABASE_STORAGE_PATH}`
+    : '/media';
 
 export const getResourceUrl = (
   id: string,
@@ -11,9 +19,9 @@ export const getResourceUrl = (
     isVideo: false,
   } as {ext?: string; isThumbnail?: boolean; isVideo?: boolean}
 ) =>
-  `${options.isVideo ? SUPABASE_VIDEOS_URL : SUPABASE_PHOTOS_URL}/${
-    options.isThumbnail ? 'thumbnails/' : ''
-  }${id}.${options.ext}`;
+  `${getStartingMediaPath()}/${
+    options.isVideo ? SUPABASE_VIDEOS_FOLDER : SUPABASE_PHOTOS_FOLDER
+  }/${options.isThumbnail ? 'thumbnails/' : ''}${id}.${options.ext}`;
 
 const classNamesByFileName: Record<string, string> = {
   IMG_4240: 'object-bottom',
