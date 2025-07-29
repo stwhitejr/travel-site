@@ -21,7 +21,7 @@ export default function CategorySliderIntro(props: HeroTag) {
         fill
         className={`object-cover ${inView ? 'cinematic-pan' : ''}`}
         priority
-        {...(props.blur ? {blurDataURL: props.blur} : {})}
+        {...(props.blur ? {blurDataURL: props.blur, placeholder: 'blur'} : {})}
       />
       <div className="absolute inset-0 flex items-center justify-center text-white text-4xl text-shadow-lg/30 text-center p-5">
         {props.tag_description}
