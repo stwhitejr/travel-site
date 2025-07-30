@@ -109,6 +109,7 @@ export default function LocationIntro({
               {!isEditing && (
                 <div className="flex items-center gap-2 pt-4 flex-wrap">
                   <a
+                    data-testid="GoogleMapLink"
                     target="_blank"
                     href={`https://www.google.com/maps/search/${location.coordinates?.join(
                       ','

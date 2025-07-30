@@ -11,6 +11,7 @@ import {useState} from 'react';
 import LocationRelativeNavigation from './LocationRelativeNavigation';
 import useIsMobile from '@/util/useIsMobile';
 import {CurrentPageComponentProps} from '@/components/page_slider/PageSlider';
+import {BUILD_CATEGORY_ID} from '@/util/constants';
 
 export default function LocationEntry({
   id,
@@ -64,6 +65,8 @@ export default function LocationEntry({
               />
             ) : withinView ? (
               <Gallery
+                tagsDenyList={[BUILD_CATEGORY_ID]}
+                ratingFilterThreshold={0}
                 tags={allTags}
                 photos={location.photos}
                 onClick={() => {

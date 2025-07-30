@@ -111,6 +111,7 @@ export default function Globe({
 
   return (
     <div
+      id="Globe"
       className="w-full h-full"
       onPointerEnter={disableSwiper}
       onPointerLeave={enableSwiper}

@@ -40,14 +40,17 @@ interface GalleryProps {
   AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
   filterPhotosWithNoRating?: boolean;
   tags?: Tag[];
+  ratingFilterThreshold?: number;
+  tagsDenyList?: number[];
 }
 
 export default function Gallery({
   photos,
   onClick,
   AutoPlayButton,
-  filterPhotosWithNoRating,
   tags,
+  tagsDenyList = [],
+  ratingFilterThreshold = 2,
 }: GalleryProps) {
   const pageSliderContext = usePageSliderContext();
   const isMobile = useIsMobile();
@@ -56,12 +59,14 @@ export default function Gallery({
   const [scrollToIndex, setScrollToIndex] = useState<null | number>(null);
 
   const sortedPhotos = useMemo(() => {
-    return (
-      filterPhotosWithNoRating
-        ? photos.filter((photo) => !!photo.rating)
-        : [...photos]
-    ).sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }, [photos, filterPhotosWithNoRating]);
+    return photos
+      .filter(
+        (photo) =>
+          (photo.rating || 0) >= ratingFilterThreshold &&
+          !photo.tags.some((tag) => tagsDenyList.includes(tag.id))
+      )
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  }, [photos, ratingFilterThreshold]);
   const {selectedPhoto, setSelectedPhotoIndex, selectedPhotoIndex} =
     useGallery(sortedPhotos);
 

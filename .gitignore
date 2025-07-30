@@ -43,3 +43,10 @@ next-env.d.ts
 raw_photos/
 source_data/
 output/
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

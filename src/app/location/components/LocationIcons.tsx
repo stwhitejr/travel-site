@@ -1,10 +1,10 @@
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {Tag} from '@/lib/tags';
+import {FAVORITES_CATEGORY_ID} from '@/util/constants';
 import {
   BadgeQuestionMark,
   BikeIcon,
   BirdIcon,
-  CloudIcon,
   DogIcon,
   HammerIcon,
   HeartIcon,
@@ -13,6 +13,7 @@ import {
   SkullIcon,
   SnowflakeIcon,
   SproutIcon,
+  SunIcon,
   TruckIcon,
   WavesIcon,
 } from 'lucide-react';
@@ -30,7 +31,7 @@ export const iconsByTagName: Record<string, typeof BikeIcon> = {
   desert: SkullIcon,
   trail: MapIcon,
   wildlife: BirdIcon,
-  vista: CloudIcon,
+  vista: SunIcon,
   'early days': SproutIcon,
   build: HammerIcon,
   favorites: HeartIcon,
@@ -53,7 +54,7 @@ export default function LocationIcons(props: {
     }, {} as Record<string, Tag>);
 
     return Object.values(tagsById).reduce((acc, tag) => {
-      if (tag.name in iconsByTagName) {
+      if (tag.name in iconsByTagName && tag.id !== FAVORITES_CATEGORY_ID) {
         const Icon = iconsByTagName[tag.name];
         if (Icon) {
           acc.push(

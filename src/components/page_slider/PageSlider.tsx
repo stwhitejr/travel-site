@@ -119,6 +119,8 @@ export default function PageSlider({
         className={`w-full h-full  overflow-y-hidden`}
         modules={[Keyboard, EffectCreative]}
         keyboard={{enabled: true}}
+        simulateTouch={false}
+        allowTouchMove={true}
         effect="creative"
         speed={500}
         creativeEffect={{

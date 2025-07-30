@@ -5,8 +5,7 @@ import Marker from '@/app/globe/Marker';
 import Link from 'next/link';
 import {useMemo} from 'react';
 import useLocations from '../hooks/useLocations';
-
-const EARLY_DAYS_TAG_ID = 88;
+import {BUILD_CATEGORY_ID, EARLY_DAYS_CATEGORY_ID} from '@/util/constants';
 
 const MarkerWithLink = (props: MarkerComponentProps) => {
   return (
@@ -30,13 +29,20 @@ export default function LocationList({
   const markers = useMemo(() => {
     return locations.reduce((acc, location) => {
       if (location.coordinates) {
+        const isFromBuild = location.tags.some(
+          (tag) => tag.id === BUILD_CATEGORY_ID
+        );
+        if (isFromBuild) {
+          return acc;
+        }
         if (!trip) {
           // @ts-expect-error coordinates is checked above
           acc = acc.concat(location);
         } else {
           const isTrip1 = location.tags.some(
-            (tag) => tag.id === EARLY_DAYS_TAG_ID
+            (tag) => tag.id === EARLY_DAYS_CATEGORY_ID
           );
+
           if ((trip === 1 && isTrip1) || (trip === 2 && !isTrip1)) {
             // @ts-expect-error coordinates is checked above
             acc = acc.concat(location);

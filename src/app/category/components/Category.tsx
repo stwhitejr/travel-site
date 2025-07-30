@@ -8,6 +8,7 @@ import {HeroTag, Tag} from '@/lib/tags';
 import SubHeader from '@/components/SubHeader';
 import CategoryRelativeNavigation from './CategoryRelativeNavigation';
 import {CurrentPageComponentProps} from '@/components/page_slider/PageSlider';
+import {BUILD_CATEGORY_ID, EARLY_DAYS_CATEGORY_ID} from '@/util/constants';
 
 export interface CategoryProps {
   id: number | string;
@@ -60,7 +61,9 @@ export default function Category({
       </div>
       <div className="m-2 flex-1 h-full md:overflow-y-auto">
         <Gallery
-          filterPhotosWithNoRating
+          ratingFilterThreshold={
+            id === EARLY_DAYS_CATEGORY_ID || id === BUILD_CATEGORY_ID ? 0 : 2
+          }
           photos={photos}
           AutoPlayButton={AutoPlayButton}
           tags={galleryTags}
