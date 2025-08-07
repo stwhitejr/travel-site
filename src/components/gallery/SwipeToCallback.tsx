@@ -1,7 +1,7 @@
 'use client';
 
-import {useSpring, animated} from '@react-spring/web';
-import {useDrag} from '@use-gesture/react';
+import {motion, useAnimation} from 'framer-motion';
+import {useEffect, useRef} from 'react';
 
 export default function SwipeToCallback({
   callback,
@@ -14,42 +14,57 @@ export default function SwipeToCallback({
   axis?: 'y' | 'x';
   className?: string;
 }) {
-  // @ts-expect-error dynamic key should be safe
-  const [{[axis]: axisValue}, api] = useSpring(() => ({[axis]: 0}));
+  const controls = useAnimation();
+  const hasCalledBack = useRef(false);
 
-  const bind = useDrag(
-    ({down, movement: [mx, my], velocity: [vx, vy], direction: [dx, dy]}) => {
-      const movement = axis === 'y' ? my : mx;
-      const velocity = axis === 'y' ? vy : vx;
-      const direction = axis === 'y' ? dy : dx;
-      if (down) {
-        api.start({[axis]: movement, immediate: true});
-      } else {
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: {type: 'spring', stiffness: 300, damping: 60},
+    });
+  }, []);
+
+  return (
+    <motion.div
+      initial={{opacity: 1, y: '100%'}}
+      drag={axis}
+      dragDirectionLock
+      dragMomentum={false}
+      onDragEnd={async (event, info) => {
+        const movement = axis === 'y' ? info.offset.y : info.offset.x;
+        const velocity = axis === 'y' ? info.velocity.y : info.velocity.x;
         const goingUpOrLeft = movement < -100;
         const goingDownOrRight = movement > 100;
         const shouldCallback =
-          goingUpOrLeft ||
-          goingDownOrRight ||
-          (velocity > 0.5 && direction > 0);
-        if (shouldCallback) {
+          goingUpOrLeft || goingDownOrRight || velocity > 500; // Framer uses px/s
+
+        if (shouldCallback && !hasCalledBack.current) {
+          hasCalledBack.current = true;
+
           const windowSpace =
             axis === 'y' ? window.innerHeight : window.innerWidth;
-          api.start({
-            [axis]: goingUpOrLeft ? -windowSpace : windowSpace,
-            config: {tension: 200, friction: 30},
-            onResolve: () => callback(goingUpOrLeft ? 'up/left' : 'down/right'),
-          });
-        } else {
-          api.start({[axis]: 0, config: {tension: 300, friction: 30}});
-        }
-      }
-    },
-    {axis, pointer: {touch: true}}
-  );
+          const target = goingUpOrLeft ? -windowSpace : windowSpace;
 
-  return (
-    <animated.div {...bind()} style={{[axis]: axisValue}} className={className}>
+          // @ts-expect-error dynamic key
+          await controls.start({
+            [axis]: target,
+            transition: {type: 'spring', stiffness: 300, damping: 30},
+          });
+
+          callback(goingUpOrLeft ? 'up/left' : 'down/right');
+        } else {
+          // @ts-expect-error dynamic key
+          controls.start({
+            [axis]: 0,
+            transition: {type: 'spring', stiffness: 300, damping: 30},
+          });
+        }
+      }}
+      animate={controls}
+      className={className}
+    >
       {children}
-    </animated.div>
+    </motion.div>
   );
 }

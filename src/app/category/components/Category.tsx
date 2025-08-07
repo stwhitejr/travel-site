@@ -24,13 +24,12 @@ export default function Category({
   tags,
   onChangePage,
 }: CurrentPageComponentProps & CategoryProps) {
-  const AutoPlayButton = useMemo(() => {
-    const AutoPlayButtonComponent = (props: {
-      onClick: () => void;
-      isAutoPlaying: boolean;
-    }) => <CategoryTitleDisplay {...props} categoryName={categoryName} />;
+  const TitleCard = useMemo(() => {
+    const TitleCardComponent = () => (
+      <CategoryTitleDisplay categoryName={categoryName} />
+    );
 
-    return AutoPlayButtonComponent;
+    return TitleCardComponent;
   }, [categoryName]);
 
   const galleryTags = useMemo(
@@ -65,7 +64,7 @@ export default function Category({
             id === EARLY_DAYS_CATEGORY_ID || id === BUILD_CATEGORY_ID ? 0 : 2
           }
           photos={photos}
-          AutoPlayButton={AutoPlayButton}
+          TitleCard={TitleCard}
           tags={galleryTags}
         />
       </div>

@@ -2,7 +2,7 @@ import {updatePhotoRating} from '@/app/actions/updatePhotoRating';
 import {updatePhotoTags} from '@/app/actions/updatePhotoTags';
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {Tag} from '@/lib/tags';
-import {Star, StarHalf, TrashIcon} from 'lucide-react';
+import {CircleIcon, Star, StarHalf, TrashIcon} from 'lucide-react';
 import {useRouter} from 'next/navigation';
 
 const MAX_RATING = 6;
@@ -38,7 +38,11 @@ export default function PhotoSettings({
         <TrashIcon
           size={15}
           className="cursor-pointer"
-          key={rating}
+          onClick={() => handleClickRating(-1)}
+        />
+        <CircleIcon
+          size={15}
+          className="cursor-pointer"
           onClick={() => handleClickRating(0)}
         />
         {ratingArray.map((rating) => (

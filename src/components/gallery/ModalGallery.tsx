@@ -1,8 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import {Swiper, SwiperSlide} from 'swiper/react';
-import {Pagination, Keyboard, EffectCreative, Virtual} from 'swiper/modules';
+import {Swiper, SwiperRef, SwiperSlide} from 'swiper/react';
+import {
+  Pagination,
+  Keyboard,
+  EffectCreative,
+  Virtual,
+  Navigation,
+} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -10,20 +16,23 @@ import 'swiper/css/effect-creative';
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {getResourceUrl} from './util';
 import GalleryItemDetailsButton from './GalleryItemDetailsButton';
-import {ReactNode, useEffect} from 'react';
+import {forwardRef, ReactNode, useEffect} from 'react';
 import {usePageSliderContext} from '../page_slider/PageSlider';
+import PhotoSettings from './PhotoSettings';
+import {Tag} from '@/lib/tags';
+import useIsMobile from '@/util/useIsMobile';
 
-const MobileGallery = ({
-  photos,
-  selectedPhotoIndex,
-  onClick,
-  closeButton,
-}: {
-  photos: PhotoMetadataWithTags[];
-  selectedPhotoIndex: number;
-  onClick: (index: number) => void;
-  closeButton?: ReactNode;
-}) => {
+const ModalGallery = forwardRef<
+  SwiperRef,
+  {
+    photos: PhotoMetadataWithTags[];
+    selectedPhotoIndex: number;
+    onClick: (index: number) => void;
+    closeButton?: ReactNode;
+    tags?: Tag[];
+  }
+>(({photos, selectedPhotoIndex, onClick, closeButton, tags}, ref) => {
+  const isMobile = useIsMobile();
   const pageSliderContext = usePageSliderContext();
   useEffect(() => {
     if (pageSliderContext.disableSwiper) {
@@ -35,13 +44,16 @@ const MobileGallery = ({
       }
     };
   }, [pageSliderContext]);
+
   return (
     <Swiper
+      ref={ref}
       virtual
       initialSlide={selectedPhotoIndex}
       className="w-full h-full"
-      modules={[EffectCreative, Pagination, Keyboard, Virtual]}
+      modules={[EffectCreative, Pagination, Keyboard, Virtual, Navigation]}
       keyboard={{enabled: true}}
+      navigation={!isMobile}
       pagination={{
         type: 'fraction',
       }}
@@ -94,11 +106,16 @@ const MobileGallery = ({
       <div className="absolute top-5 right-5 z-10 text-right">
         {closeButton}
         {photos[selectedPhotoIndex] && (
-          <GalleryItemDetailsButton {...photos[selectedPhotoIndex]} />
+          <GalleryItemDetailsButton {...photos[selectedPhotoIndex]}>
+            {process.env.NODE_ENV === 'development' && (
+              <PhotoSettings allTags={tags} {...photos[selectedPhotoIndex]} />
+            )}
+          </GalleryItemDetailsButton>
         )}
       </div>
     </Swiper>
   );
-};
+});
+ModalGallery.displayName = 'ModalGallery';
 
-export default MobileGallery;
+export default ModalGallery;

@@ -2,42 +2,21 @@
 
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import useGallery from './useGallery';
-import {FC, Fragment, useEffect, useMemo, useState} from 'react';
+import {FC, Fragment, useEffect, useMemo, useRef, useState} from 'react';
 import GalleryItem from './GalleryItem';
 import {Tag} from '@/lib/tags';
-import PhotoSettings from './PhotoSettings';
-import MobileGallery from './MobileGallery';
+import ModalGallery from './ModalGallery';
 import useIsMobile from '@/util/useIsMobile';
 import {XIcon} from 'lucide-react';
 import SwipeToCallback from './SwipeToCallback';
-import {usePageSliderContext} from '../page_slider/PageSlider';
 import {motion} from 'framer-motion';
 import {createPortal} from 'react-dom';
-
-const incrementIndex = ({
-  index,
-  count,
-  dir,
-}: {
-  index: number;
-  count: number;
-  dir: 'left' | 'right';
-}) => {
-  if (dir === 'right') {
-    if (index === count - 1) {
-      return 0;
-    }
-    return index + 1;
-  } else if (index === 0) {
-    return count - 1;
-  }
-  return index - 1;
-};
+import {SwiperRef} from 'swiper/react';
 
 interface GalleryProps {
   photos: PhotoMetadataWithTags[];
   onClick?: (arg: number | null) => void;
-  AutoPlayButton?: FC<{onClick: () => void; isAutoPlaying: boolean}>;
+  TitleCard?: FC;
   filterPhotosWithNoRating?: boolean;
   tags?: Tag[];
   ratingFilterThreshold?: number;
@@ -47,15 +26,14 @@ interface GalleryProps {
 export default function Gallery({
   photos,
   onClick,
-  AutoPlayButton,
+  TitleCard,
   tags,
   tagsDenyList = [],
   ratingFilterThreshold = 2,
 }: GalleryProps) {
-  const pageSliderContext = usePageSliderContext();
+  const modalGallerySwiperRef = useRef<SwiperRef>(null);
   const isMobile = useIsMobile();
 
-  const [autoPlay, setAutoPlay] = useState(false);
   const [scrollToIndex, setScrollToIndex] = useState<null | number>(null);
 
   const sortedPhotos = useMemo(() => {
@@ -66,15 +44,15 @@ export default function Gallery({
           !photo.tags.some((tag) => tagsDenyList.includes(tag.id))
       )
       .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos, ratingFilterThreshold]);
-  const {selectedPhoto, setSelectedPhotoIndex, selectedPhotoIndex} =
-    useGallery(sortedPhotos);
+
+  const {setSelectedPhotoIndex, selectedPhotoIndex} = useGallery(sortedPhotos);
 
   const handleClick = (
     index: number | null,
     _scrollToIndex?: number | null
   ) => {
-    setAutoPlay(false);
     setSelectedPhotoIndex(index);
     onClick?.(index);
 
@@ -86,82 +64,19 @@ export default function Gallery({
   };
 
   useEffect(() => {
-    if (autoPlay) {
-      if (pageSliderContext.disableSwiper) {
-        pageSliderContext.disableSwiper();
-      }
-      let index = 1;
-      setSelectedPhotoIndex(0);
-      setScrollToIndex(0);
-      const interval = setInterval(() => {
-        setSelectedPhotoIndex(index);
-        setScrollToIndex(index);
-        index = incrementIndex({
-          index,
-          count: sortedPhotos.length,
-          dir: 'right',
-        });
-      }, 3000);
-
+    if (selectedPhotoIndex !== null) {
       const listener = (e: KeyboardEvent) => {
         if (e.key === 'Escape' || e.key === 'Dead') {
-          setAutoPlay(false);
           setSelectedPhotoIndex(null);
         }
       };
 
       window.addEventListener('keydown', listener);
-
       return () => {
-        clearInterval(interval);
         window.removeEventListener('keydown', listener);
-        if (pageSliderContext.enableSwiper) {
-          pageSliderContext.enableSwiper();
-        }
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoPlay]);
-
-  useEffect(() => {
-    const listener = (e: KeyboardEvent) => {
-      if (selectedPhotoIndex === null || autoPlay) {
-        return;
-      }
-      if (e.key === 'ArrowRight') {
-        const newIndex = incrementIndex({
-          index: selectedPhotoIndex,
-          count: sortedPhotos.length,
-          dir: 'right',
-        });
-        setSelectedPhotoIndex(newIndex);
-        setScrollToIndex(newIndex);
-      } else if (e.key === 'ArrowLeft') {
-        const newIndex = incrementIndex({
-          index: selectedPhotoIndex,
-          count: sortedPhotos.length,
-          dir: 'left',
-        });
-        setSelectedPhotoIndex(newIndex);
-        setScrollToIndex(newIndex);
-      }
-    };
-
-    if (!!selectedPhoto) {
-      if (pageSliderContext.disableSwiper) {
-        pageSliderContext.disableSwiper();
-      }
-      window.addEventListener('keydown', listener);
-    }
-
-    return () => {
-      if (pageSliderContext.enableSwiper) {
-        pageSliderContext.enableSwiper();
-      }
-      window.removeEventListener('keydown', listener);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPhoto]);
+  }, [selectedPhotoIndex]);
 
   const closeButton = (
     <div
@@ -172,19 +87,25 @@ export default function Gallery({
     </div>
   );
 
+  const galleryLength = sortedPhotos.length;
+  const gridColumnLength = galleryLength >= 5 ? 5 : galleryLength;
+  const isMultiRowGrid = galleryLength > 5;
+
   return (
     <>
-      {isMobile &&
-        selectedPhotoIndex !== null &&
+      {selectedPhotoIndex !== null &&
         createPortal(
           <SwipeToCallback
             callback={() => handleClick(null)}
-            className="fixed inset-0 z-50 touch-none bg-[#0f0e0e]"
+            className="fixed inset-0 z-50 touch-none p-10 bg-[#0f0e0e]"
           >
-            <MobileGallery
+            <ModalGallery
+              ref={modalGallerySwiperRef}
               onClick={handleClick}
               selectedPhotoIndex={selectedPhotoIndex}
               photos={sortedPhotos}
+              closeButton={!isMobile && closeButton}
+              tags={tags}
             />
           </SwipeToCallback>,
           document.body
@@ -196,55 +117,25 @@ export default function Gallery({
         }}
         animate={{opacity: 1}}
         exit={{opacity: 0}}
-        className={`grid grid-cols-2 md:grid-cols-5 gap-2 md:h-full`}
+        className={`grid grid-cols-2 md:grid-cols-${gridColumnLength} gap-2 md:h-full`}
       >
-        {AutoPlayButton && (
-          <AutoPlayButton
-            isAutoPlaying={autoPlay}
-            onClick={() => {
-              if (autoPlay) {
-                setSelectedPhotoIndex(null);
-              }
-              setAutoPlay(!autoPlay);
-            }}
-          />
-        )}
+        {TitleCard && <TitleCard />}
 
         {sortedPhotos.map((photo, index) => {
-          const isSelected =
-            !isMobile &&
-            selectedPhoto?.id === photo.id &&
-            index < photos.length;
           return (
             <Fragment key={photo.id}>
               <GalleryItem
                 photo={photo}
                 index={index}
-                isSelected={isSelected}
+                galleryLength={galleryLength}
+                useThumbnail={isMultiRowGrid}
+                gridColumnLength={gridColumnLength}
                 shouldScrollTo={!isMobile && scrollToIndex === index}
-                selectedPhotoExists={!!selectedPhoto}
                 onClick={handleClick}
-                closeButton={closeButton}
-              >
-                {isSelected && process.env.NODE_ENV === 'development' && (
-                  <PhotoSettings allTags={tags} {...photo} />
-                )}
-              </GalleryItem>
+              />
             </Fragment>
           );
         })}
-        {/* Creat extra grid items so the photos at the bottom of somethign to span */}
-        {!isMobile && selectedPhoto && (
-          <>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-            <div className="h-full min-h-[120px]">&nbsp;</div>
-          </>
-        )}
       </motion.div>
     </>
   );

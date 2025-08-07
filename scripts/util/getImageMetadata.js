@@ -56,7 +56,10 @@ const getImageMetadata = async (filePath) => {
         // tagsFromJsonFile
       ),
       rating: imageMetadata.Rating,
-      orientation: imageMetadata.Orientation === 1 ? 'landscape' : 'portrait',
+      orientation:
+        imageMetadata.ImageHeight > imageMetadata.ImageWidth
+          ? 'portrait'
+          : 'landscape',
     },
   };
 };

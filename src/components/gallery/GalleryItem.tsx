@@ -4,14 +4,19 @@ import {PhotoMetadataWithTags} from '@/lib/photos';
 import Image from 'next/image';
 import {getClassNamesByFileName, getResourceUrl} from './util';
 import {motion} from 'framer-motion';
-import './GalleryItem.css';
-import {ReactNode, useCallback, useEffect, useRef} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import {useInView} from 'react-intersection-observer';
-import GalleryItemDetailsButton from './GalleryItemDetailsButton';
 
 const priorityIndices = [0, 3, 4, 6, 8, 13];
 
-const getGridItemClass = (index: number) => {
+const getGridItemClass = (
+  galleryLength: number,
+  columnLength: number,
+  index: number
+) => {
+  if (columnLength === 2 || galleryLength === 1) {
+    return '';
+  }
   switch (index) {
     case 0:
       return 'md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-3';
@@ -32,23 +37,21 @@ const getGridItemClass = (index: number) => {
 };
 
 export default function GalleryItem({
-  isSelected,
-  selectedPhotoExists,
   index,
   photo,
   onClick,
-  children,
-  closeButton,
   shouldScrollTo,
+  useThumbnail,
+  gridColumnLength,
+  galleryLength,
 }: {
-  isSelected: boolean;
-  selectedPhotoExists: boolean;
   index: number;
   photo: PhotoMetadataWithTags;
   onClick: (index: number | null, scrollToIndex?: number | null) => void;
-  children?: ReactNode;
-  closeButton: ReactNode;
   shouldScrollTo?: boolean;
+  useThumbnail: boolean;
+  gridColumnLength: number;
+  galleryLength: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const {ref: inViewRef, inView} = useInView({
@@ -65,8 +68,6 @@ export default function GalleryItem({
     [inViewRef]
   );
 
-  const priority = priorityIndices.includes(index);
-
   useEffect(() => {
     if (shouldScrollTo) {
       ref.current?.scrollIntoView({behavior: 'instant'});
@@ -77,54 +78,40 @@ export default function GalleryItem({
     onClick(index, index);
   };
 
+  const priority = galleryLength <= 4 || priorityIndices.includes(index);
+
   return (
     <motion.div
       ref={setRefs}
       layout
-      className={`${
-        isSelected
-          ? 'row-span-2 col-span-2 md:row-span-4 md:col-span-3 h-[100vh] md:h-auto'
-          : !selectedPhotoExists
-          ? getGridItemClass(index)
-          : ''
-      } relative min-h-[120px]`}
+      className={`${getGridItemClass(
+        galleryLength,
+        gridColumnLength,
+        index
+      )} relative min-h-[120px]`}
     >
       {inView && (
-        <>
-          <Image
-            priority={priority}
-            src={getResourceUrl(
-              photo.file_name,
-              isSelected || priority
-                ? undefined
-                : {
-                    isThumbnail: true,
-                    ext: 'webp',
-                  }
-            )}
-            alt={`${photo.file_name} - ${photo.id}`}
-            fill
-            className={`rounded opacity-90 md:opacity-60 hover:opacity-100 ${
-              isSelected
-                ? 'GalleryItem-selectedPhoto opacity-100 md:opacity-100 object-contain'
-                : `object-cover ${getClassNamesByFileName(
-                    photo.file_name
-                  )} cursor-pointer`
-            }`}
-            {...(!isSelected ? {onClick: handleClick} : {})}
-            {...(photo.blur
-              ? {placeholder: 'blur', blurDataURL: photo.blur}
-              : {})}
-          />
-          {isSelected && (
-            <div className="absolute top-2 right-5 text-right">
-              {closeButton}
-              <GalleryItemDetailsButton {...photo}>
-                {children}
-              </GalleryItemDetailsButton>
-            </div>
+        <Image
+          priority={priority}
+          src={getResourceUrl(
+            photo.file_name,
+            priority || !useThumbnail
+              ? undefined
+              : {
+                  isThumbnail: true,
+                  ext: 'webp',
+                }
           )}
-        </>
+          alt={`${photo.file_name} - ${photo.id}`}
+          fill
+          className={`rounded opacity-90 md:opacity-60 hover:opacity-100 object-cover ${`${getClassNamesByFileName(
+            photo.file_name
+          )} cursor-pointer`}`}
+          onClick={handleClick}
+          {...(photo.blur
+            ? {placeholder: 'blur', blurDataURL: photo.blur}
+            : {})}
+        />
       )}
     </motion.div>
   );

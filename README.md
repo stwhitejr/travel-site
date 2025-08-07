@@ -8,13 +8,11 @@ This is a photo gallery based website built entirely off my iPhone photos. Using
 
 <img width="1911" height="882" alt="Screenshot 2025-07-18 at 11 11 55 AM" src="https://github.com/user-attachments/assets/c131d2b3-7f2c-4e02-9953-f73efd248b7a" />
 
-
 The category pages are 100% derived from the keywords/tags found on the photos at time of ingestion. It'll take the highest rated photo and use that as a "tile" photo on the category list page. Once on the category page we use a photo tags join table to get the list of photo metadata.
 
 ## Locations
 
 <img width="1909" height="837" alt="Screenshot 2025-07-18 at 11 28 20 AM" src="https://github.com/user-attachments/assets/25491227-c180-4cd7-8017-cd7e03c1637e" />
-
 
 The location page uses a list of locations 100% derived from iPhone photo coordinates. In one of the ingestion scripts we implode on locations that are somewhat close together so we don't have locations that are basically right next to each other on the map. The frontend uses Mapbox to create a globe with markers that link to location entity pages.
 
@@ -26,7 +24,7 @@ Once on a location entity page we get all photos that have the correct associate
 
 <img width="1682" height="757" alt="Screenshot 2025-07-18 at 11 19 34 AM" src="https://github.com/user-attachments/assets/29fb8159-e9ca-49e1-9bc1-3f2be7e38f72" />
 
-Using mostly just CSS including grid, filter, and animations I'm able to create a unique (in my opinion) hand built photo gallery. Thanks to TailwindCSS I can easily adjust the grid and styles for mobile. It supports intuitive left/right key clicks or swipes and an autoplay feature on desktop.
+Using mostly just CSS including grid, filter, and animations I'm able to create a unique (in my opinion) hand built photo gallery. Thanks to TailwindCSS I can easily adjust the grid and styles for mobile. It supports intuitive left/right key clicks or swipes.
 
 ### Navigation and Swiping
 
@@ -53,7 +51,6 @@ I was originally never going to put in any kind of admin UI as I didn't plan on 
 <img width="714" height="632" alt="Screenshot 2025-07-29 at 10 16 10 AM" src="https://github.com/user-attachments/assets/252617e3-ffee-4f68-b8e7-eab9378cc560" />
 <img width="897" height="434" alt="Screenshot 2025-07-29 at 10 16 19 AM" src="https://github.com/user-attachments/assets/20475cb3-f9ee-4a82-89dd-fe6c5ba363f0" />
 <img width="896" height="604" alt="Screenshot 2025-07-29 at 10 16 26 AM" src="https://github.com/user-attachments/assets/a1ef8604-8eef-4e53-ae26-0d53b1670526" />
-
 
 # Developing
 

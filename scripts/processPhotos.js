@@ -32,9 +32,9 @@ async function processPhotos() {
         return 'continue';
       }
 
-      if (metadata.orientation === 'portrait') {
-        image.rotate(90);
-      }
+      // if (metadata.orientation === 'portrait') {
+      //   image.rotate(90);
+      // }
 
       // Resize while preserving aspect ratio
       const resizedImage = image.resize({
