@@ -63,7 +63,7 @@ const ModalGallery = forwardRef<
       ]}
       keyboard={{enabled: true}}
       navigation={!isMobile}
-      zoom={{maxRatio: 3}}
+      zoom
       pagination={{
         type: 'fraction',
       }}
@@ -89,7 +89,7 @@ const ModalGallery = forwardRef<
 
         return (
           <SwiperSlide key={photo.file_name}>
-            <div className={`w-full h-full bg-[#0f0e0e]`}>
+            <div className={`w-full h-full bg-[#0f0e0e] swiper-zoom-container`}>
               <Image
                 src={getResourceUrl(
                   photo.file_name,
@@ -113,7 +113,7 @@ const ModalGallery = forwardRef<
         );
       })}
 
-      <div className="absolute top-5 right-5 z-10 text-right">
+      <div className="absolute top-0 right-0 z-10 text-right">
         {closeButton}
         {photos[selectedPhotoIndex] && (
           <GalleryItemDetailsButton {...photos[selectedPhotoIndex]}>

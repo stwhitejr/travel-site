@@ -117,7 +117,13 @@ export default function Gallery({
         }}
         animate={{opacity: 1}}
         exit={{opacity: 0}}
-        className={`grid grid-cols-2 md:grid-cols-${gridColumnLength} gap-2 md:h-full`}
+        className={`grid gap-2 md:h-full`}
+        // Tailwind won't add all the possible classes to the bundle if i do something like grid-cols-${gridColumnLength}
+        style={{
+          gridTemplateColumns: `repeat(${
+            isMobile ? 2 : gridColumnLength
+          }, minmax(0, 1fr))`,
+        }}
       >
         {TitleCard && <TitleCard />}
 
