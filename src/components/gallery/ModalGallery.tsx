@@ -8,11 +8,13 @@ import {
   EffectCreative,
   Virtual,
   Navigation,
+  Zoom,
 } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-creative';
+import 'swiper/css/zoom';
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {getResourceUrl} from './util';
 import GalleryItemDetailsButton from './GalleryItemDetailsButton';
@@ -51,9 +53,17 @@ const ModalGallery = forwardRef<
       virtual
       initialSlide={selectedPhotoIndex}
       className="w-full h-full"
-      modules={[EffectCreative, Pagination, Keyboard, Virtual, Navigation]}
+      modules={[
+        EffectCreative,
+        Pagination,
+        Keyboard,
+        Virtual,
+        Navigation,
+        Zoom,
+      ]}
       keyboard={{enabled: true}}
       navigation={!isMobile}
+      zoom={{maxRatio: 3}}
       pagination={{
         type: 'fraction',
       }}

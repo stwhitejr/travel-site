@@ -97,7 +97,7 @@ export default function Gallery({
         createPortal(
           <SwipeToCallback
             callback={() => handleClick(null)}
-            className="fixed inset-0 z-50 touch-none p-10 bg-[#0f0e0e]"
+            className="fixed inset-0 z-50 touch-pan-y touch-pinch-zoom p-4 bg-[#0f0e0e]"
           >
             <ModalGallery
               ref={modalGallerySwiperRef}

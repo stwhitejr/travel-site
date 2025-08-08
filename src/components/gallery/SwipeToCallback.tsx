@@ -3,13 +3,15 @@
 import {motion, useAnimation} from 'framer-motion';
 import {useEffect, useRef} from 'react';
 
+type Dir = 'up/left' | 'down/right';
+
 export default function SwipeToCallback({
   callback,
   children,
   className = '',
   axis = 'y',
 }: {
-  callback: (dir: 'up/left' | 'down/right') => void;
+  callback: (dir: Dir) => void;
   children: React.ReactNode;
   axis?: 'y' | 'x';
   className?: string;
@@ -23,7 +25,7 @@ export default function SwipeToCallback({
       y: 0,
       transition: {type: 'spring', stiffness: 300, damping: 60},
     });
-  }, []);
+  }, [controls]);
 
   return (
     <motion.div
@@ -31,20 +33,39 @@ export default function SwipeToCallback({
       drag={axis}
       dragDirectionLock
       dragMomentum={false}
-      onDragEnd={async (event, info) => {
-        const movement = axis === 'y' ? info.offset.y : info.offset.x;
-        const velocity = axis === 'y' ? info.velocity.y : info.velocity.x;
-        const goingUpOrLeft = movement < -100;
-        const goingDownOrRight = movement > 100;
+      dragElastic={0.2}
+      onDragStart={() => {
+        hasCalledBack.current = false;
+      }}
+      onDragEnd={async (_evt, info) => {
+        const dx = info.offset.x;
+        const dy = info.offset.y;
+        const vy = info.velocity.y;
+
+        // --- Tunables ---
+        const MIN_Y_DIST = 180; // require a bigger vertical throw
+        const MIN_Y_VEL = 800; // px/s vertical velocity
+        const DOMINANCE = 1.8; // |dy| must be >= DOMINANCE * |dx|
+        const MAX_X_WOBBLE = 140; // if horizontal sway exceeds this, ignore
+        // -----------------
+
+        // Only consider if it's clearly vertical
+        const isMostlyVertical = Math.abs(dy) >= DOMINANCE * Math.abs(dx);
+        const xTooLarge = Math.abs(dx) > MAX_X_WOBBLE;
+
+        const passesDistance = Math.abs(dy) > MIN_Y_DIST;
+        const passesVelocity = Math.abs(vy) > MIN_Y_VEL;
+
         const shouldCallback =
-          goingUpOrLeft || goingDownOrRight || velocity > 500; // Framer uses px/s
+          isMostlyVertical && !xTooLarge && (passesDistance || passesVelocity);
 
         if (shouldCallback && !hasCalledBack.current) {
           hasCalledBack.current = true;
 
+          const goingUp = dy < 0;
           const windowSpace =
             axis === 'y' ? window.innerHeight : window.innerWidth;
-          const target = goingUpOrLeft ? -windowSpace : windowSpace;
+          const target = goingUp ? -windowSpace : windowSpace;
 
           // @ts-expect-error dynamic key
           await controls.start({
@@ -52,7 +73,7 @@ export default function SwipeToCallback({
             transition: {type: 'spring', stiffness: 300, damping: 30},
           });
 
-          callback(goingUpOrLeft ? 'up/left' : 'down/right');
+          callback(goingUp ? 'up/left' : 'down/right');
         } else {
           // @ts-expect-error dynamic key
           controls.start({
