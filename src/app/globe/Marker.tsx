@@ -4,12 +4,13 @@ import {MarkerComponentProps} from './Globe';
 const Marker = (props: MarkerComponentProps) => {
   const isSelected = props.selectedMarker === props.id;
   return (
-    <MapPin
-      id={`MapPin-${props.id}`}
-      className={`rounded-xl p-1 cursor-pointer width-[20px] height-[20px] ${
-        isSelected ? 'bg-red-500 ' : 'bg-red-400 opacity-80 hover:opacity-100'
+    <div
+      className={`rounded-2xl p-1 cursor-pointer ${
+        isSelected ? 'bg-red-500 ' : 'bg-red-400 opacity-70 hover:opacity-100'
       } hover:bg-red-500 `}
-    />
+    >
+      <MapPin size={20} id={`MapPin-${props.id}`} />
+    </div>
   );
 };
 

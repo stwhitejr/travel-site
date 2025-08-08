@@ -9,7 +9,7 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export interface MarkerComponentProps {
   id: number;
-  onClick: () => void;
+  onClick?: () => void;
   selectedMarker?: string | number | null;
 }
 
@@ -132,12 +132,9 @@ export default function Globe({
             longitude={coordinates[1]}
             anchor="bottom"
             className={`${selectedMarker === id ? 'z-10' : ''}`}
+            onClick={() => setClickedFromMap(true)}
           >
-            <MarkerComponent
-              selectedMarker={selectedMarker}
-              id={id}
-              onClick={() => setClickedFromMap(true)}
-            />
+            <MarkerComponent selectedMarker={selectedMarker} id={id} />
           </Marker>
         ))}
       </Map>
