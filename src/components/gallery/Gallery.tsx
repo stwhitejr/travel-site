@@ -121,7 +121,9 @@ export default function Gallery({
                 photo={photo}
                 index={TitleCard ? (index === 0 ? index : index + 1) : index}
                 galleryLength={TitleCard ? galleryLength + 1 : galleryLength}
-                onClick={handleClick}
+                onClick={(index) =>
+                  handleClick(TitleCard && index ? index - 1 : index)
+                }
               />
             </Fragment>
           );
