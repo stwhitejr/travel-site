@@ -2,7 +2,7 @@
 
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import useGallery from './useGallery';
-import {FC, Fragment, useEffect, useMemo, useRef, useState} from 'react';
+import {FC, Fragment, useEffect, useMemo, useRef} from 'react';
 import GalleryItem from './GalleryItem';
 import {Tag} from '@/lib/tags';
 import ModalGallery from './ModalGallery';
@@ -34,8 +34,6 @@ export default function Gallery({
   const modalGallerySwiperRef = useRef<SwiperRef>(null);
   const isMobile = useIsMobile();
 
-  const [scrollToIndex, setScrollToIndex] = useState<null | number>(null);
-
   const sortedPhotos = useMemo(() => {
     return photos
       .filter(
@@ -49,18 +47,9 @@ export default function Gallery({
 
   const {setSelectedPhotoIndex, selectedPhotoIndex} = useGallery(sortedPhotos);
 
-  const handleClick = (
-    index: number | null,
-    _scrollToIndex?: number | null
-  ) => {
+  const handleClick = (index: number | null) => {
     setSelectedPhotoIndex(index);
     onClick?.(index);
-
-    if (typeof _scrollToIndex !== 'undefined' && _scrollToIndex !== null) {
-      setScrollToIndex(_scrollToIndex);
-    } else if (index === null && scrollToIndex !== null) {
-      setScrollToIndex(null);
-    }
   };
 
   useEffect(() => {
@@ -80,7 +69,7 @@ export default function Gallery({
 
   const closeButton = (
     <div
-      onClick={() => handleClick(null, selectedPhotoIndex)}
+      onClick={() => handleClick(null)}
       className={`inline-block p-2 rounded-full drop-shadow-md bg-slate-800  text-white cursor-pointer`}
     >
       <XIcon />
@@ -136,7 +125,6 @@ export default function Gallery({
                 galleryLength={galleryLength}
                 useThumbnail={isMultiRowGrid}
                 gridColumnLength={gridColumnLength}
-                shouldScrollTo={!isMobile && scrollToIndex === index}
                 onClick={handleClick}
               />
             </Fragment>

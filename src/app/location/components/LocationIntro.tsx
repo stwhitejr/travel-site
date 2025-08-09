@@ -33,7 +33,7 @@ export default function LocationIntro({
   location: Location;
   photos: PhotoMetadataWithTags[];
   onClickResize?: (condensed: boolean) => void;
-  slideDirection: 'previous' | 'next';
+  slideDirection?: 'previous' | 'next';
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [draft, setDraft] = useState<null | {
@@ -68,12 +68,12 @@ export default function LocationIntro({
   return (
     <motion.div
       initial={{
-        x: slideDirection === 'previous' ? '-20%' : '20%',
+        x: slideDirection === 'previous' ? '-10%' : '10%',
         opacity: 0,
       }}
       transition={{
         type: 'spring',
-        duration: 1.5,
+        duration: 1,
       }}
       animate={{x: 0, opacity: 1}}
       layout

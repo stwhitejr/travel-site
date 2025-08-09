@@ -2,7 +2,6 @@
 
 import useLocationById from '../hooks/useLocationById';
 import {Tag} from '@/lib/tags';
-
 import {LoaderPinwheel} from 'lucide-react';
 import SubHeader from '@/components/SubHeader';
 import LocationIntro from './LocationIntro';

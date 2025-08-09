@@ -71,7 +71,7 @@ export default function PageSlider({
 
   // Reset swiper to index 2 when search param changes
   useEffect(() => {
-    swiperRef.current?.swiper.slideTo(2, 0, false);
+    swiperRef.current?.swiper?.slideTo(2, 0, false);
     setUpstreamIsAboutToUpdate(false);
   }, [props.id]);
 
@@ -79,7 +79,7 @@ export default function PageSlider({
   // This gives us the transition of the previous slides actually moving off the screen
   useEffect(() => {
     if (upstreamIsAboutToUpdate) {
-      swiperRef.current?.swiper.slideTo(
+      swiperRef.current?.swiper?.slideTo(
         slideDirection.current === 'previous' ? 0 : 4
       );
     }
@@ -107,7 +107,7 @@ export default function PageSlider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentId]);
 
-  const swiperIndex = swiperRef.current?.swiper.activeIndex || 2;
+  const swiperIndex = swiperRef.current?.swiper?.activeIndex || 2;
 
   return (
     <PageSliderContext.Provider
@@ -158,7 +158,7 @@ export default function PageSlider({
               slideDirection={slideDirection.current}
               onChangePage={(dir) => {
                 slideDirection.current = dir;
-                swiperRef.current?.swiper.slideTo(
+                swiperRef.current?.swiper?.slideTo(
                   dir === 'previous' ? 1 : 3,
                   0,
                   false

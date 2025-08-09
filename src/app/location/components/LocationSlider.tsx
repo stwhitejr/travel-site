@@ -1,12 +1,11 @@
 'use client';
 
 import {Tag} from '@/lib/tags';
-import {Suspense, useCallback, useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import useRelativeLocations from '../hooks/useRelativeLocations';
 import LocationEntry from './LocationEntry';
 import {useRouter, useSearchParams} from 'next/navigation';
 import 'swiper/css';
-import Loading from '@/components/Loading';
 import LocationSliderIntro from './LocationSliderIntro';
 import PageSlider, {
   CurrentPageComponentProps,
@@ -35,9 +34,7 @@ export default function LocationSlider(props: {
 
   const CurrentPageComponent = useMemo(() => {
     const CurrentPage = (_props: CurrentPageComponentProps) => (
-      <Suspense fallback={<Loading />}>
-        <LocationEntry {..._props} allTags={props.allTags} />
-      </Suspense>
+      <LocationEntry {..._props} allTags={props.allTags} />
     );
     return CurrentPage;
   }, [props.allTags]);
