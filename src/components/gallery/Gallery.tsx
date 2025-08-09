@@ -78,7 +78,6 @@ export default function Gallery({
 
   const galleryLength = sortedPhotos.length;
   const gridColumnLength = galleryLength >= 5 ? 5 : galleryLength;
-  const isMultiRowGrid = galleryLength > 5;
 
   return (
     <>
@@ -114,17 +113,14 @@ export default function Gallery({
           }, minmax(0, 1fr))`,
         }}
       >
-        {TitleCard && <TitleCard />}
-
         {sortedPhotos.map((photo, index) => {
           return (
             <Fragment key={photo.id}>
+              {index === 1 && TitleCard && <TitleCard />}
               <GalleryItem
                 photo={photo}
-                index={index}
-                galleryLength={galleryLength}
-                useThumbnail={isMultiRowGrid}
-                gridColumnLength={gridColumnLength}
+                index={TitleCard ? (index === 0 ? index : index + 1) : index}
+                galleryLength={TitleCard ? galleryLength + 1 : galleryLength}
                 onClick={handleClick}
               />
             </Fragment>
