@@ -50,13 +50,19 @@ export default function CategoryRelativeNavigation({
   return (
     <>
       {previous && (
-        <SubHeaderLink dir="left" onClick={() => onClick('previous')}>
+        <SubHeaderLink
+          dir="left"
+          onClick={() => onClick('previous', previous.tag_id!)}
+        >
           {truncateText(previous.tag_description || previous.tag_name || '')}{' '}
           <PreviousIcon className="inline w-4" />
         </SubHeaderLink>
       )}
       {next && (
-        <SubHeaderLink dir="right" onClick={() => onClick('next')}>
+        <SubHeaderLink
+          dir="right"
+          onClick={() => onClick('next', next.tag_id!)}
+        >
           {truncateText(next.tag_description || next.tag_name || '')}{' '}
           <NextIcon className="inline w-4" />
         </SubHeaderLink>

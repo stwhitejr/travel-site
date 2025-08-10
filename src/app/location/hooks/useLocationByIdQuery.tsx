@@ -12,7 +12,9 @@ const getLocationsById = async (options: QueryLocationsByIdOptions) => {
   return result.data || ({} as LocationByIdResult);
 };
 
-export default function useLocationById(options: QueryLocationsByIdOptions) {
+export default function useLocationByIdQuery(
+  options: QueryLocationsByIdOptions
+) {
   return useSuspenseQuery({
     queryKey: ['locations-by-id', options.id],
     queryFn: () => getLocationsById(options),

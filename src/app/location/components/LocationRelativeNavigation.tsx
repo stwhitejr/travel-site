@@ -1,14 +1,17 @@
 import {SubHeaderLink} from '@/components/SubHeader';
 import {truncateText} from '@/util/helpers';
 import useRelativeLocations from '../hooks/useRelativeLocations';
+import {CurrentPageComponentProps} from '@/components/page_slider/PageSlider';
+
+export interface LocationRelativeNavigationProps {
+  id: number;
+  onChangeRelativeLocation: CurrentPageComponentProps['onChangePage'];
+}
 
 export default function LocationRelativeNavigation({
   id,
   onChangeRelativeLocation,
-}: {
-  id: number;
-  onChangeRelativeLocation: (dir: 'previous' | 'next') => void;
-}) {
+}: LocationRelativeNavigationProps) {
   const {previous, next} = useRelativeLocations(id);
 
   return (
@@ -16,7 +19,7 @@ export default function LocationRelativeNavigation({
       {previous && (
         <SubHeaderLink
           dir="left"
-          onClick={() => onChangeRelativeLocation('previous')}
+          onClick={() => onChangeRelativeLocation('previous', previous.id)}
         >
           {truncateText(previous.title)}
         </SubHeaderLink>
@@ -24,7 +27,7 @@ export default function LocationRelativeNavigation({
       {next && (
         <SubHeaderLink
           dir="right"
-          onClick={() => onChangeRelativeLocation('next')}
+          onClick={() => onChangeRelativeLocation('next', next.id)}
         >
           {truncateText(next.title)}
         </SubHeaderLink>

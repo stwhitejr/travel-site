@@ -2,30 +2,35 @@
 
 import useLocationById from '../hooks/useLocationById';
 import {Tag} from '@/lib/tags';
-import {LoaderPinwheel} from 'lucide-react';
 import SubHeader from '@/components/SubHeader';
 import LocationIntro from './LocationIntro';
-import Gallery from '@/components/gallery/Gallery';
 import {useState} from 'react';
-import LocationRelativeNavigation from './LocationRelativeNavigation';
-import {CurrentPageComponentProps} from '@/components/page_slider/PageSlider';
+import LocationRelativeNavigation, {
+  LocationRelativeNavigationProps,
+} from './LocationRelativeNavigation';
 import {BUILD_CATEGORY_ID} from '@/util/constants';
+import Loading from '@/components/Loading';
+import withLocationPhotos from './withLocationPhotos';
+import Gallery from '@/components/gallery/Gallery';
+
+const LocationGallery = withLocationPhotos(Gallery, <Loading />);
 
 export default function LocationEntry({
   id,
   allTags,
   onChangePage,
-  withinView = true,
-  slideDirection,
-}: CurrentPageComponentProps & {
+}: {
+  onChangePage: LocationRelativeNavigationProps['onChangeRelativeLocation'];
+  id: number;
   allTags: Tag[];
 }) {
   const [isCondensed, setIsCondensed] = useState<null | boolean>(null);
-  const response = useLocationById({
-    id: typeof id === 'string' ? parseInt(id, 10) : id,
-  });
+  const location = useLocationById();
 
-  const location = response.data;
+  if (!location) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col md:h-full md:overflow-y-hidden bg-[#0f0e0e]">
       <SubHeader>
@@ -36,13 +41,11 @@ export default function LocationEntry({
       </SubHeader>
 
       <div className="md:h-[100%] md:overflow-y-hidden flex flex-col">
-        <div className={`${isCondensed ? 'h-[15%]' : 'h-[40vh] md:h-[30%]'}`}>
+        <div className={`${isCondensed ? 'h-[15%]' : 'h-[45vh] md:h-[30%]'}`}>
           <LocationIntro
             condensed={!!isCondensed}
             location={location}
-            photos={location.photos}
             onClickResize={setIsCondensed}
-            slideDirection={slideDirection}
           />
         </div>
 
@@ -52,19 +55,12 @@ export default function LocationEntry({
           }`}
           onTouchStart={(e) => e.stopPropagation()}
         >
-          {response.isLoading ? (
-            <LoaderPinwheel
-              size={50}
-              className="font-5xl animate-spin m-auto"
-            />
-          ) : withinView ? (
-            <Gallery
-              tagsDenyList={[BUILD_CATEGORY_ID]}
-              ratingFilterThreshold={0}
-              tags={allTags}
-              photos={location.photos}
-            />
-          ) : null}
+          <LocationGallery
+            id={Number(id)}
+            tagsDenyList={[BUILD_CATEGORY_ID]}
+            ratingFilterThreshold={0}
+            tags={allTags}
+          />
         </div>
       </div>
     </div>

@@ -12,7 +12,6 @@ import {
   ShrinkIcon,
   TrashIcon,
 } from 'lucide-react';
-import {PhotoMetadataWithTags} from '@/lib/photos';
 import LocationIndex from './LocationIndex';
 import {useState} from 'react';
 import LocationTitle from './LocationTitle';
@@ -21,17 +20,20 @@ import {updateLocation} from '@/app/actions/updateLocation';
 import AdminButton from '@/components/AdminButton';
 import LocationDelete from './LocationDelete';
 import LocationDates from './LocationDates';
+import withLocationPhotos from './withLocationPhotos';
+
+const LocationDatesWithPhotos = withLocationPhotos(LocationDates);
+const LocationDeleteWithPhotos = withLocationPhotos(LocationDelete);
+const LocationIconsWithPhotos = withLocationPhotos(LocationIcons);
 
 export default function LocationIntro({
   condensed,
   location,
-  photos,
   onClickResize,
   slideDirection,
 }: {
   condensed: boolean;
   location: Location;
-  photos: PhotoMetadataWithTags[];
   onClickResize?: (condensed: boolean) => void;
   slideDirection?: 'previous' | 'next';
 }) {
@@ -86,7 +88,7 @@ export default function LocationIntro({
         </>
       ) : (
         <>
-          <div className="flex-2 md:flex-1 min-h-20">{list}</div>
+          <div className="flex-2 md:flex-1 h-full">{list}</div>
           <div className="flex-1 md:h-full flex gap-5 md:gap-2 flex-row md:flex-col justify-between p-4 md:pr-20">
             <div className="flex-2 md:flex-none md:max-w-[400px]">
               <h1 className={`${anton.className} md:text-2xl`}>
@@ -127,7 +129,7 @@ export default function LocationIntro({
                   >
                     {location.coordinates?.join(', ')}
                   </div> */}
-                  <LocationDates photos={photos} />
+                  <LocationDatesWithPhotos id={location.id} />
                 </div>
               )}
             </div>
@@ -142,9 +144,9 @@ export default function LocationIntro({
                 <AdminButton onClick={handleClickSubmit}>Update</AdminButton>
               </div>
             )}
-            {isDeleting && <LocationDelete id={location.id} photos={photos} />}
+            {isDeleting && <LocationDeleteWithPhotos id={location.id} />}
             <div className="flex-1 md:flex-none text-right md:text-left m-[-4px]">
-              <LocationIcons photos={photos} />
+              <LocationIconsWithPhotos id={location.id} />
             </div>
             {process.env.NODE_ENV === 'development' && (
               <div className="absolute top-5 right-12 flex gap-2">

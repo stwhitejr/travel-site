@@ -143,9 +143,7 @@ export default function GalleryItem({
           )}
           alt={`${photo.file_name} - ${photo.id}`}
           fill
-          className={`rounded ${
-            Math.round(Math.random()) ? 'grayscale' : ''
-          } opacity-90 md:opacity-60 hover:opacity-100 object-cover ${`${getClassNamesByFileName(
+          className={`rounded opacity-90 md:opacity-60 hover:opacity-100 object-cover ${`${getClassNamesByFileName(
             photo.file_name
           )} cursor-pointer`}`}
           onClick={handleClick}

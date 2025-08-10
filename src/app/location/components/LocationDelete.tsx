@@ -1,15 +1,15 @@
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import {useState} from 'react';
-import useLocations from '../hooks/useLocations';
 import AdminButton from '@/components/AdminButton';
 import {deleteLocation} from '@/app/actions/deleteLocation';
 import Dropdown from '@/components/Dropdown';
+import {useLocationContext} from '../context/LocationContext';
 
 export default function LocationDelete(props: {
   id: number;
   photos: PhotoMetadataWithTags[];
 }) {
-  const {data: locations = []} = useLocations();
+  const {locations} = useLocationContext();
   const [newLocationIdForPhotos, setNewLocationIdForPhotos] = useState<
     null | number
   >(null);

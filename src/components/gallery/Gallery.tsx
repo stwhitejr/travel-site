@@ -13,7 +13,7 @@ import {motion} from 'framer-motion';
 import {createPortal} from 'react-dom';
 import {SwiperRef} from 'swiper/react';
 
-interface GalleryProps {
+export interface GalleryProps {
   photos: PhotoMetadataWithTags[];
   onClick?: (arg: number | null) => void;
   TitleCard?: FC;

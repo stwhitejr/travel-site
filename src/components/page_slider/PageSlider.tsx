@@ -26,7 +26,7 @@ const SLIDE_TRANSITION_TIME = 2000;
 export interface CurrentPageComponentProps {
   id: string | number;
   withinView: boolean;
-  onChangePage: (dir: 'previous' | 'next') => void;
+  onChangePage: (dir: 'previous' | 'next', id: string | number) => void;
   slideDirection: 'previous' | 'next';
 }
 

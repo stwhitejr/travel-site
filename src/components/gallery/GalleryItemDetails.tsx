@@ -1,7 +1,7 @@
 import {PhotoMetadataWithTags} from '@/lib/photos';
 import DateComponent from '../DateComponent';
 import {MouseEvent, ReactNode} from 'react';
-import useLocationById from '@/app/location/hooks/useLocationById';
+import useLocationById from '@/app/location/hooks/useLocationByIdQuery';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {anton, lato} from '@/util/fonts';

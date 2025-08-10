@@ -1,8 +1,8 @@
 import {useMemo} from 'react';
-import useLocations from './useLocations';
+import {useLocationContext} from '../context/LocationContext';
 
 export default function useRelativeLocations(id: number) {
-  const {data: locations = []} = useLocations();
+  const {locations} = useLocationContext();
   return useMemo(() => {
     const currentIndex = locations.findIndex((entry) => entry.id === id);
     const nextIndex = currentIndex + 1;

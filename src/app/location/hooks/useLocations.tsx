@@ -9,6 +9,10 @@ const getLocations = async () => {
   return (result.data || []) as LocationWithTags[];
 };
 
+export type LocationWithCoordinates = Omit<LocationWithTags, 'coordinates'> & {
+  coordinates: [number, number];
+};
+
 export default function useLocations() {
   return useQuery({
     queryKey: ['locations'],
