@@ -8,7 +8,11 @@ import {Tag} from '@/lib/tags';
 import LocationContext, {Trip} from '../context/LocationContext';
 import LocationEntry from './LocationEntry';
 import useLocations, {LocationWithCoordinates} from '../hooks/useLocations';
-import {BUILD_CATEGORY_ID, EARLY_DAYS_CATEGORY_ID} from '@/util/constants';
+import {
+  BUILD_CATEGORY_ID,
+  EARLY_DAYS_CATEGORY_ID,
+  TRIP_2_ID,
+} from '@/util/constants';
 
 export default function Location({tags}: {tags: Tag[]}) {
   const router = useRouter();
@@ -24,8 +28,7 @@ export default function Location({tags}: {tags: Tag[]}) {
         (!trip ||
           (trip === 1 &&
             location.tags.some((tag) => tag.id === EARLY_DAYS_CATEGORY_ID)) ||
-          (trip === 2 &&
-            !location.tags.some((tag) => tag.id === EARLY_DAYS_CATEGORY_ID)))
+          (trip === 2 && location.tags.some((tag) => tag.id === TRIP_2_ID)))
     ) as LocationWithCoordinates[];
   }, [response.data, trip]);
 

@@ -44,6 +44,8 @@ export default function LocationIntro({
     index: number | null;
   }>(null);
 
+  console.log('draft', draft);
+
   const handleClickSubmit = async () => {
     if (draft) {
       try {

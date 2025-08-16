@@ -1,7 +1,9 @@
 import {getTagsWithHero} from '@/lib/tags';
 import Link from 'next/link';
 import CategoryTile from './components/CategoryTile';
-import {FAVORITES_CATEGORY_ID} from '@/util/constants';
+import {FAVORITES_CATEGORY_ID, TRIP_2_ID} from '@/util/constants';
+
+const categoryDenyList = [FAVORITES_CATEGORY_ID, TRIP_2_ID];
 
 export default async function CategoriesPage() {
   const {data} = await getTagsWithHero();
@@ -9,7 +11,7 @@ export default async function CategoriesPage() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-5 pt-2">
       {data?.map((photo) =>
-        photo.file_name && photo.tag_id !== FAVORITES_CATEGORY_ID ? (
+        photo.file_name && !categoryDenyList.includes(photo.tag_id) ? (
           <Link key={photo.id} href={`/category/${photo.tag_id}`}>
             <CategoryTile {...photo} />
           </Link>
